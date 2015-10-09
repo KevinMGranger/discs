@@ -1,0 +1,29 @@
+#pragma once
+#include "GameObject.h"
+#include "Camera.h"
+#include "DirectionalLight.h"
+
+// This class is intended to improve the efficiency of using multiple different
+// shaders, etc. without having the developers worry about the order in which things
+// will be drawn.  Currently, it is just a wrapper that sets the correct
+// shaders, sets camera data, and calls Draw on the object.  In the future, it will queue
+// draw calls so that objects using the same set of shaders will all be drawn in one batch, 
+// minimizing the number of times we need to switch shaders. 
+
+class Renderer
+{
+public:
+	Renderer(Camera* camera, ID3D11DeviceContext* context);
+	~Renderer();
+
+	void AddTestLights(DirectionalLight light, DirectionalLight light2);
+
+	void DrawObject(GameObject* object);
+private:
+	Camera* camera;
+	ID3D11DeviceContext* context;
+
+	DirectionalLight tl;
+	DirectionalLight tl2;
+};
+
