@@ -158,7 +158,7 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	mesh = new Mesh("cube.obj", device);
+	mesh = new Mesh("../Resources/cube.obj", device);
 }
 
 // --------------------------------------------------------
@@ -182,7 +182,7 @@ void MyDemoGame::CreateObjects()
 	Material mat;
 	mat.VertexShader = vertexShader;
 	mat.PixelShader = pixelShader;
-	HR(CreateWICTextureFromFile(device, L"blueGlow.jpg", nullptr, &mat.ResourceView));
+	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &mat.ResourceView));
 
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
