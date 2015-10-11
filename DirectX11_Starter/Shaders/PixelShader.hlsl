@@ -12,21 +12,42 @@ struct VertexToPixel
 	//  |    |                |
 	//  v    v                v
 	float4 position		: SV_POSITION;
+	float4 positionInWorld : TEXCOORD1;
 	float3 normal		: NORMAL;
 	float2 uv			: TEXCOORD0;
 };
 
 struct DirectionalLight
 {
-	float4 AmbientColor;
 	float4 DiffuseColor;
 	float3 Direction;
 };
 
+struct PointLight
+{
+	float4 DiffuseColor;
+	float3 Location;
+};
+
 cbuffer lightBuffer : register(b0)
 {
-	DirectionalLight light;
-	DirectionalLight light2;
+	float4 ambientColor;
+	DirectionalLight dLight0;
+	DirectionalLight dLight1;
+	DirectionalLight dLight2;
+	DirectionalLight dLight3;
+	DirectionalLight dLight4;
+	DirectionalLight dLight5;
+	DirectionalLight dLight6;
+	DirectionalLight dLight7;
+	PointLight pLight0;
+	PointLight pLight1;
+	PointLight pLight2;
+	PointLight pLight3;
+	PointLight pLight4;
+	PointLight pLight5;
+	PointLight pLight6;
+	PointLight pLight7;
 }
 
 Texture2D diffuseTexture : register(t0);
@@ -45,17 +66,75 @@ float4 main(VertexToPixel input) : SV_TARGET
 {
 	float4 surfaceColor = diffuseTexture.Sample(basicSampler, input.uv);
 
-	float4 output = float4(0, 0, 0, 0);
-	float3 directionToLight = normalize(-light.Direction);
-	float diffuseAmount = saturate(dot(directionToLight, input.normal));
-	
-	output += surfaceColor * (light.DiffuseColor * diffuseAmount + light.AmbientColor);
-
-	directionToLight = normalize(-light2.Direction);
+	float4 output = surfaceColor * ambientColor;
+	float3 directionToLight;
+	float diffuseAmount;
+ 
+	//START DIRECTIONAL LIGHTS
+	directionToLight = normalize(-dLight0.Direction);
 	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight0.DiffuseColor * diffuseAmount;
 
-	
-	output += surfaceColor * (light2.DiffuseColor * diffuseAmount + light2.AmbientColor);
+	directionToLight = normalize(-dLight1.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight1.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight2.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight2.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight3.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight3.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight4.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight4.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight5.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight5.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight6.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight6.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(-dLight7.Direction);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * dLight7.DiffuseColor * diffuseAmount;
+
+	//START POINT LIGHTS
+	directionToLight = normalize(pLight0.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight0.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight1.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight1.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight2.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight2.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight3.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight3.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight4.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight4.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight5.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight5.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight6.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight6.DiffuseColor * diffuseAmount;
+
+	directionToLight = normalize(pLight7.Location - input.positionInWorld);
+	diffuseAmount = saturate(dot(directionToLight, input.normal));
+	output += surfaceColor * pLight7.DiffuseColor * diffuseAmount;
 
 	return output;
 }

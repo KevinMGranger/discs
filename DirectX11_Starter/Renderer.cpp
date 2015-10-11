@@ -9,26 +9,26 @@ Renderer::Renderer(Camera* c, ID3D11DeviceContext* con)
 {
 	camera = c;
 	context = con;
+	lm = new LightManager(0);
+	lightsLastUpdated = -1;
 }
 
 
 /// <summary>
-/// Empty destructor.
+/// Empty destructor.  (not anymore, but this isn't worth updating until future updates)
 /// </summary>
 Renderer::~Renderer()
 {
+	delete lm;
 }
 
 /// <summary>
-/// Do not use.  For test purposes only.
+/// Gets the light manager that is used for this renderer.
 /// </summary>
-/// <param name="light"></param>
-/// <param name="light2"></param>
-void Renderer::AddTestLights(DirectionalLight light, DirectionalLight light2)
+/// <returns>the light manager</returns>
+LightManager * Renderer::GetLightManager()
 {
-	//TODO: actually write lighting stuff
-	tl = light;
-	tl2 = light2;
+	return lm;
 }
 
 // In the future, this will add an object to a group
@@ -49,15 +49,11 @@ void Renderer::DrawObject(GameObject* object)
 	mat.VertexShader->SetShader(false);
 	mat.PixelShader->SetShader(false);
 
-	mat.PixelShader->SetData(
-		"light",
-		&tl,
-		sizeof(DirectionalLight));
-
-	mat.PixelShader->SetData(
-		"light2",
-		&tl2,
-		sizeof(DirectionalLight));
+	if (lightsLastUpdated < lm->GetLastUpdated())
+	{
+		lm->SetLightBufferData(mat.PixelShader);
+		lightsLastUpdated = lm->GetLastUpdated();
+	}
 
 	mat.PixelShader->CopyAllBufferData();
 

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "DirectionalLight.h"
+#include "LightManager.h"
 
 // This class is intended to improve the efficiency of using multiple different
 // shaders, etc. without having the developers worry about the order in which things
@@ -16,14 +17,14 @@ public:
 	Renderer(Camera* camera, ID3D11DeviceContext* context);
 	~Renderer();
 
-	void AddTestLights(DirectionalLight light, DirectionalLight light2);
+	LightManager* GetLightManager();
 
 	void DrawObject(GameObject* object);
 private:
 	Camera* camera;
 	ID3D11DeviceContext* context;
 
-	DirectionalLight tl;
-	DirectionalLight tl2;
+	LightManager* lm;
+	float lightsLastUpdated;
 };
 

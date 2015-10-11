@@ -42,6 +42,7 @@ struct VertexToPixel
 	//  |    |                |
 	//  v    v                v
 	float4 position		: SV_POSITION;	// XYZW position (System Value Position)
+	float4 positionInWorld : TEXCOORD1;
 	float3 normal		: NORMAL;
 	float2 uv			: TEXCOORD0;
 };
@@ -57,6 +58,8 @@ VertexToPixel main( VertexShaderInput input )
 {
 	// Set up output struct
 	VertexToPixel output;
+
+	output.positionInWorld = mul(float4(input.position, 1.0f), world);
 	
 	// The vertex's position (input.position) must be converted to world space,
 	// then camera space (relative to our 3D camera), then to proper homogenous 

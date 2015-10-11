@@ -3,8 +3,9 @@
 
 using namespace DirectX;
 
-struct DirectionalLight
+struct PointLight
 {
 	XMFLOAT4 DiffuseColor;
-	XMFLOAT3 Direction;
+	XMFLOAT3 Location;
 };
+

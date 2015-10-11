@@ -128,22 +128,25 @@ bool MyDemoGame::Init()
 
 	camera = new Camera(XMFLOAT3(0, 0, -5), XMFLOAT3(0, 0, 1), aspectRatio);
 
-	//TODO:  move away from test light structure once lighting is better handled in renderer
+	//TODO:  set up these lights in the correct places
 	renderer = new Renderer(camera, deviceContext);
 
 	DirectionalLight testLight = {
-		XMFLOAT4(0.2f, 0.0f, 0.0f, 1.0f),
-		XMFLOAT4(0, 1, 0, 1),
+		XMFLOAT4(0.0f, 0.4f, 0.0f, 1.0f),
 		XMFLOAT3(1, -1, 1)
 	};
 
 	DirectionalLight testLight2 = {
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
-		XMFLOAT4(0, 0, 1, 1),
+		XMFLOAT4(0.0f, 0.0f, 0.7f, 1.0f),
 		XMFLOAT3(-1, -0.3f, 0)
 	};
 
-	renderer->AddTestLights(testLight, testLight2);
+	LightManager* lm = renderer->GetLightManager();
+	lm->SetDirectionalLight(0, &testLight);
+	lm->SetDirectionalLight(1, &testLight2);
+	lm->SetAmbientLight(&XMFLOAT4(0.3f, 0, 0, 1));
+
+	lm->UpdateLights(0.1f);
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives we'll be using and how to interpret them
@@ -229,6 +232,16 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	//This demo requires only updating the camera.  All other active
 	//GameObjects should also be updated here.
 	camera->Update(deltaTime);
+
+	//this stuff is here to demonstrate the flow for working with a dynamic point light
+	PointLight pl;
+	pl.DiffuseColor = { 1, 1, 1, 1 };
+	pl.Location = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+	renderer->GetLightManager()->SetPointLight(0, &pl);
+	//we shouldn't call the next method unless we actually changed the location of the light,
+	//but I got a bit lazy here since we're really not actually going to need this later.
+	//see what happens if you comment it out!
+	renderer->GetLightManager()->UpdateLights(totalTime);
 }
 
 // --------------------------------------------------------
