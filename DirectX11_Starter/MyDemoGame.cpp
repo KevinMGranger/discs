@@ -22,6 +22,7 @@
 // ----------------------------------------------------------------------------
 
 #include "MyDemoGame.h"
+#include <iostream>
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -152,6 +153,9 @@ bool MyDemoGame::Init()
 	// geometric primitives we'll be using and how to interpret them
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	//set the gamestate
+	gState = MAIN;
+
 	// Successfully initialized
 	return true;
 }
@@ -228,7 +232,10 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 {
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
-
+	if (GetAsyncKeyState('Q') & 0x8000 && gState == GAME)
+		EndGame();
+	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && gState == MAIN)
+		StartGame();
 	//This demo requires only updating the camera.  All other active
 	//GameObjects should also be updated here.
 	camera->Update(deltaTime);
@@ -243,28 +250,40 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	//see what happens if you comment it out!
 	renderer->GetLightManager()->UpdateLights(totalTime);
 }
-
+void MyDemoGame::StartGame()
+{
+	gState = GAME;
+}
+void MyDemoGame::EndGame()
+{
+	gState = MAIN;
+}
 // --------------------------------------------------------
 // Clear the screen, redraw everything, present to the user
 // --------------------------------------------------------
 void MyDemoGame::DrawScene(float deltaTime, float totalTime)
 {
 	// Background color (Cornflower Blue in this case) for clearing
-	const float color[4] = {0.4f, 0.6f, 0.75f, 0.0f};
+	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
 
 	// Clear the render target and depth buffer (erases what's on the screen)
 	//  - Do this ONCE PER FRAME
 	//  - At the beginning of DrawScene (before drawing *anything*)
 	deviceContext->ClearRenderTargetView(renderTargetView, color);
 	deviceContext->ClearDepthStencilView(
-		depthStencilView, 
+		depthStencilView,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		0);
+	//is the game going
+	if (gState == GAME)
+	{
 
-	//Drawing is done simply by asking the renderer to do so.
-	renderer->DrawObject(object);
+		//Drawing is done simply by asking the renderer to do so.
+		renderer->DrawObject(object);
 
+		
+	}
 	// Present the buffer
 	//  - Puts the image we're drawing into the window so the user can see it
 	//  - Do this exactly ONCE PER FRAME

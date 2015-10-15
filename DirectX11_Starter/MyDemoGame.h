@@ -26,7 +26,7 @@ class MyDemoGame : public DirectXGameCore
 public:
 	MyDemoGame(HINSTANCE hInstance);
 	~MyDemoGame();
-
+	enum gameState { START, MAIN, GAME };
 	// Overrides for base level methods
 	bool Init();
 	void OnResize();
@@ -51,6 +51,8 @@ private:
 	void CreateGeometry();
 	void LoadShaders();
 	void CreateObjects();
+	void StartGame();
+	void EndGame();
 
 	Mesh* mesh;
 
@@ -59,7 +61,7 @@ private:
 	Camera* camera;
 
 	Renderer* renderer;
-
+	gameState gState;
 	// Wrappers for DirectX shaders to provide simplified functionality
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
