@@ -249,6 +249,18 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	//but I got a bit lazy here since we're really not actually going to need this later.
 	//see what happens if you comment it out!
 	renderer->GetLightManager()->UpdateLights(totalTime);
+
+	if (gState == GAME)
+	{
+		if (GetAsyncKeyState('J') & 0x8000)
+		{
+			object->Translate(XMFLOAT3(-deltaTime, 0, 0));
+		}
+		else if (GetAsyncKeyState('K') & 0x8000)
+		{
+			object->Translate(XMFLOAT3(deltaTime, 0, 0));
+		}
+	}
 }
 void MyDemoGame::StartGame()
 {
