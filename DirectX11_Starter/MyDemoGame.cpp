@@ -127,7 +127,7 @@ bool MyDemoGame::Init()
 	LoadShaders();
 	CreateObjects();
 
-	camera = new Camera(XMFLOAT3(0, 0, -5), XMFLOAT3(0, 0, 1), aspectRatio);
+	camera = new DebugCamera(XMFLOAT3(0, 0, -5), XMFLOAT3(0, 0, 1), aspectRatio);
 
 	//TODO:  set up these lights in the correct places
 	renderer = new Renderer(camera, deviceContext);
@@ -238,7 +238,7 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 		StartGame();
 	//This demo requires only updating the camera.  All other active
 	//GameObjects should also be updated here.
-	camera->Update(deltaTime);
+	camera->Update(deltaTime, totalTime);
 
 	//this stuff is here to demonstrate the flow for working with a dynamic point light
 	PointLight pl;

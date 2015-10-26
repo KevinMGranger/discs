@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "DebugCamera.h"
 #include "Renderer.h"
 #include "DirectionalLight.h"
 #include "WICTextureLoader.h"
@@ -58,7 +59,7 @@ private:
 
 	GameObject* object;
 
-	Camera* camera;
+	DebugCamera* camera;
 
 	Renderer* renderer;
 	gameState gState;
