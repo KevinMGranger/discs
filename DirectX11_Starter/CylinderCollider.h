@@ -4,8 +4,6 @@
 
 using DirectX::XMFLOAT3;
 
-class GameObject {};
-
 class CylinderCollider
 {
 public:

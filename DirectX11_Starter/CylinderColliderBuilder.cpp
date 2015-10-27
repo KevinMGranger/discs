@@ -41,6 +41,7 @@ CylinderCollider CylinderColliderBuilder::finalize()
 	XMStoreFloat3(&centroid, v_centroid);
 	XMStoreFloat3(&halves, v_halves);
 
+	// this isn't correct
 	float radius = (halves.x > halves.z) ? halves.x : halves.z;
 
 	return CylinderCollider(centroid, halves.y, radius);
