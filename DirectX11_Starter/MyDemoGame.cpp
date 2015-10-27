@@ -23,6 +23,7 @@
 
 #include "MyDemoGame.h"
 #include <iostream>
+#include "ModelLoading.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -168,7 +169,11 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	mesh = new Mesh("../Resources/cube.obj", device);
+	auto verts_and_indices = load_model("../Resources/cube.obj");
+	auto &verts = verts_and_indices.first;
+	auto &indices = verts_and_indices.second;
+
+	mesh = new Mesh(verts.data(), verts.size(), indices.data(), indices.size(), device);
 }
 
 // --------------------------------------------------------

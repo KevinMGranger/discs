@@ -1,7 +1,6 @@
 #pragma once
 
 #include <d3d11.h>
-#include <fstream>
 #include <vector>
 #include <DirectXMath.h>
 #include "Vertex.h"
@@ -23,11 +22,9 @@ protected:
 public:
 	Mesh(const Vertex* vertices,
 		int vertexCount,
-		int* indices,
+		UINT* indices,
 		int indexCount,
 		ID3D11Device* device);
-
-	Mesh(char* filename, ID3D11Device* device);
 
 	// draws the mesh to the screen
 	virtual void Draw(ID3D11DeviceContext* context);
