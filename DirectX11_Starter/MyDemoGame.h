@@ -12,6 +12,7 @@
 #include "Renderer.h"
 #include "DirectionalLight.h"
 #include "WICTextureLoader.h"
+#include "CylinderCollider.h"
 
 // Include run-time memory checking in debug builds, so 
 // we can be notified of memory leaks
@@ -57,6 +58,7 @@ private:
 	void EndGame();
 
 	Mesh* mesh;
+	CylinderCollider cyl_col;
 
 	GameObject* object;
 

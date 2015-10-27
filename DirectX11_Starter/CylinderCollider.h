@@ -1,7 +1,6 @@
 #pragma once
 
 #include <DirectXMath.h>
-#include <tuple>
 
 using DirectX::XMFLOAT3;
 

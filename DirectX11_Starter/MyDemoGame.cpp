@@ -24,6 +24,7 @@
 #include "MyDemoGame.h"
 #include <iostream>
 #include "ModelLoading.h"
+#include "CylinderColliderBuilder.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -174,6 +175,10 @@ void MyDemoGame::CreateGeometry()
 	auto &indices = verts_and_indices.second;
 
 	mesh = new Mesh(verts.data(), verts.size(), indices.data(), indices.size(), device);
+
+	CylinderColliderBuilder ccb(verts[0].Position);
+	for (auto i = 1; i < verts.size(); ++i) ccb.new_point(verts[i].Position);
+	cyl_col = ccb.finalize();
 }
 
 // --------------------------------------------------------
