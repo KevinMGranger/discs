@@ -18,6 +18,7 @@ public:
 	~Renderer();
 
 	LightManager* GetLightManager();
+	void SetCamera(Camera* camera);
 
 	void DrawObject(GameObject* object);
 private:

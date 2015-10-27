@@ -31,6 +31,11 @@ LightManager * Renderer::GetLightManager()
 	return lm;
 }
 
+void Renderer::SetCamera(Camera * c)
+{
+	camera = c;
+}
+
 // In the future, this will add an object to a group
 // of objects drawn with the same shaders, and when we're finished queuing up all
 // objects to be drawn, this class will draw each batch of objects in front-to-back

@@ -91,7 +91,8 @@ MyDemoGame::~MyDemoGame()
 	//these things before deleting them in the full project.
 	delete renderer;
 
-	delete camera;
+	delete debugCamera;
+	delete trackingCamera;
 
 	if (object->GetMaterial().ResourceView)
 		object->GetMaterial().ResourceView->Release();
@@ -127,10 +128,12 @@ bool MyDemoGame::Init()
 	LoadShaders();
 	CreateObjects();
 
-	camera = new Camera(XMFLOAT3(0, 0, -5), XMFLOAT3(0, 0, 1), aspectRatio);
+	debugCamera = new DebugCamera(XMFLOAT3(0, 0, -5), XMFLOAT3(0, 0, 1), aspectRatio);
+	trackingCamera = new TrackingCamera(XMFLOAT3(0, 2, -7), XMFLOAT3(0, 0, 1), object, XMFLOAT3(0, 1, 0), .3f, aspectRatio);
+	useDebugCamera = false;
 
 	//TODO:  set up these lights in the correct places
-	renderer = new Renderer(camera, deviceContext);
+	renderer = new Renderer(debugCamera, deviceContext);
 
 	DirectionalLight testLight = {
 		XMFLOAT4(0.0f, 0.4f, 0.0f, 1.0f),
@@ -216,9 +219,13 @@ void MyDemoGame::OnResize()
 	// Handle base-level DX resize stuff
 	DirectXGameCore::OnResize();
 	
-	if (camera)
+	if (debugCamera)
 	{
-		camera->CreateProjMatrix(aspectRatio);
+		debugCamera->CreateProjMatrix(aspectRatio);
+	}
+	if (trackingCamera)
+	{
+		trackingCamera->CreateProjMatrix(aspectRatio);
 	}
 }
 #pragma endregion
@@ -236,14 +243,19 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 		EndGame();
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && gState == MAIN)
 		StartGame();
-	//This demo requires only updating the camera.  All other active
-	//GameObjects should also be updated here.
-	camera->Update(deltaTime);
+
+	debugCamera->Update(deltaTime, totalTime);
+	trackingCamera->Update(deltaTime, totalTime);
+
+	if (GetAsyncKeyState('T') & 0x8000)
+		useDebugCamera = false;
+	else if (GetAsyncKeyState('Y') & 0x8000)
+		useDebugCamera = true;
 
 	//this stuff is here to demonstrate the flow for working with a dynamic point light
 	PointLight pl;
 	pl.DiffuseColor = { 1, 1, 1, 1 };
-	pl.Location = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+	pl.Location = { debugCamera->GetPosition().x, debugCamera->GetPosition().y, debugCamera->GetPosition().z };
 	renderer->GetLightManager()->SetPointLight(0, &pl);
 	//we shouldn't call the next method unless we actually changed the location of the light,
 	//but I got a bit lazy here since we're really not actually going to need this later.
@@ -275,6 +287,10 @@ void MyDemoGame::EndGame()
 // --------------------------------------------------------
 void MyDemoGame::DrawScene(float deltaTime, float totalTime)
 {
+	// use correct camera
+	renderer->SetCamera(useDebugCamera ? (Camera*)debugCamera : (Camera*)trackingCamera);
+
+
 	// Background color (Cornflower Blue in this case) for clearing
 	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
 
@@ -349,7 +365,7 @@ void MyDemoGame::OnMouseUp(WPARAM btnState, int x, int y)
 // --------------------------------------------------------
 void MyDemoGame::OnMouseMove(WPARAM btnState, int x, int y)
 {
-	camera->Rotate(
+	debugCamera->Rotate(
 		(x - (float)prevMousePos.x) / 1200,
 		(y - (float)prevMousePos.y) / 1200);
 
