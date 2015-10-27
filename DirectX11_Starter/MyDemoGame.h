@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "DebugCamera.h"
+#include "TrackingCamera.h"
 #include "Renderer.h"
 #include "DirectionalLight.h"
 #include "WICTextureLoader.h"
@@ -59,7 +60,9 @@ private:
 
 	GameObject* object;
 
-	DebugCamera* camera;
+	DebugCamera* debugCamera;
+	TrackingCamera* trackingCamera;
+	bool useDebugCamera;
 
 	Renderer* renderer;
 	gameState gState;
