@@ -12,7 +12,7 @@ public:
 	void start(XMFLOAT3 point);
 	void new_point(XMFLOAT3 point);
 
-	CylinderCollider &&finalize();
+	CylinderCollider finalize();
 
 	XMFLOAT3 max, min;
 };
