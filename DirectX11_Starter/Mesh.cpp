@@ -2,6 +2,19 @@
 
 using namespace DirectX;
 
+Mesh::Mesh(
+	std::pair<std::vector<Vertex>, std::vector<UINT>> &verts_and_indices,
+	ID3D11Device *device)
+{
+	setup(
+		verts_and_indices.first.data(),
+		verts_and_indices.first.size(),
+		verts_and_indices.second.data(),
+		verts_and_indices.second.size(),
+		device
+		);
+}
+
 /// <summary>
 /// Constructor for a procedurally generated mesh.
 /// </summary>
@@ -11,6 +24,15 @@ using namespace DirectX;
 /// <param name="numIndices">number of indices</param>
 /// <param name="device">the device to create the buffers on</param>
 Mesh::Mesh(const Vertex* vertices,
+	int numVertices,
+	UINT* indices,
+	int numIndices,
+	ID3D11Device* device)
+{
+	setup(vertices, numVertices, indices, numIndices, device);
+}
+
+void Mesh::setup(const Vertex* vertices,
 	int numVertices,
 	UINT* indices,
 	int numIndices,

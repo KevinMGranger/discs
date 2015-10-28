@@ -171,10 +171,11 @@ bool MyDemoGame::Init()
 void MyDemoGame::CreateGeometry()
 {
 	auto verts_and_indices = load_model("../Resources/cube.obj");
+
+	mesh = new Mesh(verts_and_indices, device);
+
 	auto &verts = verts_and_indices.first;
 	auto &indices = verts_and_indices.second;
-
-	mesh = new Mesh(verts.data(), verts.size(), indices.data(), indices.size(), device);
 
 	CylinderColliderBuilder ccb(verts[0].Position);
 	for (auto i = 1; i < verts.size(); ++i) ccb.new_point(verts[i].Position);
