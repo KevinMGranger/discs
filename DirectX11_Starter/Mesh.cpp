@@ -97,8 +97,14 @@ int Mesh::GetIndexCount() { return indexCount; }
 /// Draws the mesh.
 /// </summary>
 /// <param name="context">the context to use for drawing the mesh</param>
-void Mesh::Draw(ID3D11DeviceContext* context)
+void Mesh::Draw(XMFLOAT4X4 &worldMat, ID3D11DeviceContext* context)
 {
+	material->VertexShader->SetMatrix4x4("world", worldMat);
+	material->VertexShader->CopyAllBufferData();
+
+	material->PixelShader->SetShaderResourceView("diffuseTexture", material->ResourceView);
+	material->PixelShader->SetSamplerState("basicSampler", material->SamplerState);
+
 	// set the buffers to be used
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;

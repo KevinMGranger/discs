@@ -4,8 +4,10 @@
 #include <vector>
 #include <DirectXMath.h>
 #include <tuple>
+#include <memory>
 #include "Vertex.h"
 #include "hr.h"
+#include "Material.h"
 
 class Mesh
 {
@@ -14,6 +16,8 @@ public:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 	int indexCount;
+
+	Material *material;
 
 	ID3D11Buffer* GetVertexBuffer();
 	ID3D11Buffer* GetIndexBuffer();
@@ -27,11 +31,10 @@ public:
 		ID3D11Device* device);
 
 	// draws the mesh to the screen
-	virtual void Draw(ID3D11DeviceContext* context);
+	virtual void Draw(DirectX::XMFLOAT4X4 &worldMatrix, ID3D11DeviceContext* context);
 
 	~Mesh();
 
 private:
 	void setup(const Vertex *vertices, int numVertices, UINT *indices, int numIndices, ID3D11Device *device);
 };
-

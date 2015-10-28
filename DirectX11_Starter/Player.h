@@ -5,7 +5,7 @@
 class Player: public GameObject
 {
 public:
-	Player(Mesh* m, Material mat);
+	Player(Mesh* m);
 	~Player();
 	void Fire(Disc* d);
 	void ReloadDisc();

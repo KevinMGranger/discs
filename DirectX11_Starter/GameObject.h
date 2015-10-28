@@ -1,21 +1,12 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include <memory>
 #include "Mesh.h"
 #include "SimpleShader.h"
 
 using namespace DirectX;
-
-//temporary struct; just for storing shaders until we have a 
-//real material class
-//TODO:  More full material class
-struct Material
-{
-	SimpleVertexShader* VertexShader;
-	SimplePixelShader* PixelShader;
-	ID3D11ShaderResourceView* ResourceView;
-	ID3D11SamplerState* SamplerState;
-};
+using namespace std;
 
 class GameObject
 {
@@ -28,12 +19,15 @@ protected:
 	
 	bool worldMatIsDirty;
 
-	Mesh* mesh;
-	//TODO: Make this a pointer to a material, for easier use in Renderer(?)
-	Material material;
+
+protected:
+	void update_world_matrix();
+	void init();
 
 public:
-	GameObject(Mesh* mesh, Material material);
+	GameObject(Mesh* mesh);
+
+	Mesh *mesh;
 
 	//getters for worldmat elements
 	XMFLOAT3 GetTranslation();
@@ -49,10 +43,5 @@ public:
 	void Translate(XMFLOAT3 translation);
 	void Scale(XMFLOAT3 scale);
 
-	Material GetMaterial();
-
 	void Draw(ID3D11DeviceContext* context);
-
-	~GameObject();
 };
-

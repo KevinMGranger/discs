@@ -25,6 +25,7 @@
 #include <iostream>
 #include "ModelLoading.h"
 #include "CylinderColliderBuilder.h"
+#include "WICTextureLoader.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -96,14 +97,11 @@ MyDemoGame::~MyDemoGame()
 	delete debugCamera;
 	delete trackingCamera;
 
-	if (object->GetMaterial().ResourceView)
-		object->GetMaterial().ResourceView->Release();
-	if (object->GetMaterial().SamplerState)
-		object->GetMaterial().SamplerState->Release();
-	delete object;
-
+	delete mat;
 	delete mesh;
+	delete discMesh;
 
+	delete object;
 	delete p_Disc1;
 	delete p_Disc2;
 	delete p_Disc3;
@@ -205,16 +203,12 @@ void MyDemoGame::LoadShaders()
 // --------------------------------------------------------
 void MyDemoGame::CreateObjects()
 {
-	Material playerMat;
-	Material discMat;
+	mat = new Material;
 
-	playerMat.VertexShader = vertexShader;
-	playerMat.PixelShader = pixelShader;
-	discMat.VertexShader = vertexShader;
-	discMat.PixelShader = pixelShader;
+	mat->VertexShader = vertexShader;
+	mat->PixelShader = pixelShader;
 
-	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &playerMat.ResourceView));
-	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &discMat.ResourceView));
+	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &mat->ResourceView));
 
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
@@ -224,13 +218,15 @@ void MyDemoGame::CreateObjects()
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	HR(device->CreateSamplerState(&samplerDesc, &playerMat.SamplerState));
-	HR(device->CreateSamplerState(&samplerDesc, &discMat.SamplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &mat->SamplerState));
 
-	object = new Player(mesh, playerMat);
-	p_Disc1 = new Disc(discMesh, discMat);
-	p_Disc2 = new Disc(discMesh, discMat);
-	p_Disc3 = new Disc(discMesh, discMat);
+	mesh->material = mat;
+	discMesh->material = mat;
+
+	object = new Player(mesh);
+	p_Disc1 = new Disc(discMesh);
+	p_Disc2 = new Disc(discMesh);
+	p_Disc3 = new Disc(discMesh);
 }
 
 #pragma endregion
