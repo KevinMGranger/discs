@@ -110,6 +110,8 @@ MyDemoGame::~MyDemoGame()
 
 	delete vertexShader;
 	delete pixelShader;
+
+	delete wireframeRS;
 }
 
 #pragma endregion
@@ -165,6 +167,23 @@ bool MyDemoGame::Init()
 	//set the gamestate
 	gState = MAIN;
 
+	//initialize render states
+	D3D11_RASTERIZER_DESC wireframeDesc;
+	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
+	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
+	wireframeDesc.CullMode = D3D11_CULL_NONE;
+	wireframeDesc.DepthClipEnable = true;
+
+	device->CreateRasterizerState(&wireframeDesc, &wireframeRS);
+
+	D3D11_RASTERIZER_DESC solidDesc;
+	ZeroMemory(&solidDesc, sizeof(D3D11_RASTERIZER_DESC));
+	wireframeDesc.FillMode = D3D11_FILL_SOLID;
+	wireframeDesc.CullMode = D3D11_CULL_FRONT;
+	wireframeDesc.DepthClipEnable = true;
+
+	device->CreateRasterizerState(&solidDesc, &solidRS);
+
 	// Successfully initialized
 	return true;
 }
@@ -207,14 +226,18 @@ void MyDemoGame::CreateObjects()
 {
 	Material playerMat;
 	Material discMat;
+	Material arenaMat;
 
 	playerMat.VertexShader = vertexShader;
 	playerMat.PixelShader = pixelShader;
 	discMat.VertexShader = vertexShader;
 	discMat.PixelShader = pixelShader;
+	arenaMat.VertexShader = vertexShader;
+	arenaMat.PixelShader = pixelShader;
 
 	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &playerMat.ResourceView));
 	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &discMat.ResourceView));
+	HR(CreateWICTextureFromFile(device, L"../Resources/white.jpg", nullptr, &arenaMat.ResourceView));
 
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
@@ -231,6 +254,10 @@ void MyDemoGame::CreateObjects()
 	p_Disc1 = new Disc(discMesh, discMat);
 	p_Disc2 = new Disc(discMesh, discMat);
 	p_Disc3 = new Disc(discMesh, discMat);
+	arena = new GameObject(mesh, playerMat);
+
+	arena->SetScale(XMFLOAT3(7, 7, 15));
+	arena->SetTranslation(XMFLOAT3(0, 0, 6));
 }
 
 #pragma endregion
@@ -370,10 +397,15 @@ void MyDemoGame::DrawScene(float deltaTime, float totalTime)
 	{
 
 		//Drawing is done simply by asking the renderer to do so.
+		deviceContext->RSSetState(solidRS);
 		renderer->DrawObject(object);
 		renderer->DrawObject(p_Disc1);
 		renderer->DrawObject(p_Disc2);
 		renderer->DrawObject(p_Disc3);
+
+		deviceContext->RSSetState(wireframeRS);
+		renderer->DrawObject(arena);
+
 	}
 	// Present the buffer
 	//  - Puts the image we're drawing into the window so the user can see it

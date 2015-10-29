@@ -69,6 +69,7 @@ private:
 	Disc* p_Disc1;
 	Disc* p_Disc2;
 	Disc* p_Disc3;
+	GameObject* arena;
 
 	DebugCamera* debugCamera;
 	TrackingCamera* trackingCamera;
@@ -80,4 +81,7 @@ private:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
+
+	ID3D11RasterizerState* wireframeRS;
+	ID3D11RasterizerState* solidRS;
 };
