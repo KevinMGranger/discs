@@ -109,7 +109,7 @@ MyDemoGame::~MyDemoGame()
 	delete vertexShader;
 	delete pixelShader;
 
-	delete wireframeRS;
+	//delete wireframeRS;
 }
 
 #pragma endregion
@@ -194,6 +194,8 @@ void MyDemoGame::CreateGeometry()
 	auto verts_and_indices = load_model("../Resources/cube.obj");
 
 	mesh = new Mesh(verts_and_indices, device);
+	arenaMesh = new Mesh(load_model("../Resources/cube.obj"), device);
+	arenaMesh = mesh;
 
 	auto &verts = verts_and_indices.first;
 	auto &indices = verts_and_indices.second;
@@ -201,7 +203,7 @@ void MyDemoGame::CreateGeometry()
 	CylinderColliderBuilder ccb(verts[0].Position);
 	for (auto i = 1; i < verts.size(); ++i) ccb.new_point(verts[i].Position);
 	cyl_col = ccb.finalize();
-	discMesh = new Mesh(load_model("../Resources/cylinder.obj"), device);
+	discMesh = new Mesh(load_model("../Resources/dotDisc.obj"), device);
 }
 
 // --------------------------------------------------------
@@ -223,7 +225,7 @@ void MyDemoGame::LoadShaders()
 void MyDemoGame::CreateObjects()
 {
 	mat = new Material;
-arenaMat = new Material;
+	arenaMat = new Material;
 
 	mat->VertexShader = vertexShader;
 	mat->PixelShader = pixelShader;
@@ -245,12 +247,19 @@ arenaMat = new Material;
 
 	mesh->material = mat;
 	discMesh->material = mat;
+	arenaMesh->material = mat;
 
 	object = new Player(mesh);
 	p_Disc1 = new Disc(discMesh);
 	p_Disc2 = new Disc(discMesh);
 	p_Disc3 = new Disc(discMesh);
-	arena = new GameObject(mesh);
+	arena = new GameObject(arenaMesh);
+
+
+	/*
+	object->SetRotation(XMFLOAT3(0, 90.0f, 0));
+	object->SetScale(XMFLOAT3(0.5f, 0.5f, 0.5f));
+	*/
 
 	arena->SetScale(XMFLOAT3(7, 7, 15));
 	arena->SetTranslation(XMFLOAT3(0, 0, 6));

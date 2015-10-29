@@ -7,7 +7,7 @@ Disc::Disc(Mesh* m)
 {
 	translation = XMFLOAT3(0, 0, -5);
 	isActive = false;
-	SetScale(XMFLOAT3(1, 0.2, 1));
+	SetScale(XMFLOAT3(0.5f, 0.2, 0.5f));
 }
 
 

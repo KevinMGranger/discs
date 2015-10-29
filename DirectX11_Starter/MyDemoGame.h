@@ -64,6 +64,7 @@ private:
 
 	Mesh *mesh;
 	Mesh* discMesh;
+	Mesh *arenaMesh;
 	Material *mat, *arenaMat;
 
 	CylinderCollider cyl_col;
