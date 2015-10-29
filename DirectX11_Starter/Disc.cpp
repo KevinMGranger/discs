@@ -2,8 +2,8 @@
 #include <math.h>
 
 
-Disc::Disc(Mesh* m, Material mat)
-	: GameObject(m, mat)
+Disc::Disc(Mesh* m)
+	: GameObject(m)
 {
 	translation = XMFLOAT3(0, 0, -5);
 	isActive = false;

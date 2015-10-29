@@ -98,6 +98,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="hr.h" />
     <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ModelLoading.h" />
     <ClInclude Include="MyDemoGame.h" />

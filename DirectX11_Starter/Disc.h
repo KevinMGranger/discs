@@ -4,7 +4,7 @@
 class Disc : public GameObject
 {
 public:
-	Disc(Mesh* m, Material mat);
+	Disc(Mesh* m);
 	~Disc();
 	void Launch(XMFLOAT3 p, XMFLOAT3 r);
 	void MoveDisc(float dt);
