@@ -6,12 +6,15 @@
 #include "Vertex.h"
 #include "Mesh.h"
 #include "GameObject.h"
+#include "Player.h"
+#include "Disc.h"
 #include "Camera.h"
 #include "DebugCamera.h"
 #include "TrackingCamera.h"
 #include "Renderer.h"
 #include "DirectionalLight.h"
 #include "WICTextureLoader.h"
+#include "CylinderCollider.h"
 
 // Include run-time memory checking in debug builds, so 
 // we can be notified of memory leaks
@@ -40,6 +43,8 @@ public:
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
 
+	// Disc Testing
+	Disc* DiscToLaunch();
 private:
 	// Keeps track of the old mouse position.  Useful for 
 	// determining how far the mouse moved in a single frame.
@@ -57,8 +62,14 @@ private:
 	void EndGame();
 
 	Mesh* mesh;
+	CylinderCollider cyl_col;
+	Mesh* discMesh;
 
-	GameObject* object;
+	Player* object;
+	Disc* p_Disc1;
+	Disc* p_Disc2;
+	Disc* p_Disc3;
+	GameObject* arena;
 
 	DebugCamera* debugCamera;
 	TrackingCamera* trackingCamera;
@@ -70,4 +81,7 @@ private:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
+
+	ID3D11RasterizerState* wireframeRS;
+	ID3D11RasterizerState* solidRS;
 };

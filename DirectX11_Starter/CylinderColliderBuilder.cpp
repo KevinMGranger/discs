@@ -28,7 +28,7 @@ void CylinderColliderBuilder::new_point(XMFLOAT3 point)
 }
 
 
-CylinderCollider &&CylinderColliderBuilder::finalize()
+CylinderCollider CylinderColliderBuilder::finalize()
 {
 	XMVECTOR max = XMLoadFloat3(&this->max);
 	XMVECTOR min = XMLoadFloat3(&this->min);
@@ -41,7 +41,8 @@ CylinderCollider &&CylinderColliderBuilder::finalize()
 	XMStoreFloat3(&centroid, v_centroid);
 	XMStoreFloat3(&halves, v_halves);
 
+	// this isn't correct
 	float radius = (halves.x > halves.z) ? halves.x : halves.z;
 
-	return std::move(CylinderCollider(centroid, halves.y, radius));
+	return CylinderCollider(centroid, halves.y, radius);
 }
