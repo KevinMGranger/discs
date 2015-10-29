@@ -1,6 +1,6 @@
 #include "Player.h"
 
-
+#include "Disc.h"
 
 Player::Player(Mesh* m)
 	: GameObject(m)

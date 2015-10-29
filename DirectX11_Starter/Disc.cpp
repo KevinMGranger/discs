@@ -1,13 +1,16 @@
 #include "Disc.h"
 #include <math.h>
 
+#include "Player.h"
 
-Disc::Disc(Mesh* m)
+
+Disc::Disc(Mesh* m, Player* p)
 	: GameObject(m)
 {
 	translation = XMFLOAT3(0, 0, -5);
 	isActive = false;
-	SetScale(XMFLOAT3(0.5f, 0.2, 0.5f));
+	SetScale(XMFLOAT3(0.5f, 0.2f, 0.5f));
+	player = p;
 }
 
 
@@ -25,14 +28,17 @@ void Disc::MoveDisc(float dt)
 	}
 	if (translation.z > 13.5)
 	{
+		translation.z = 13.5;
 		velocity.z *= -1;
 	}
 	if (translation.x < -3.5)
 	{
+		translation.x = -3.5;
 		velocity.x *= -1;
 	}
 	if (translation.x > 3.5)
 	{
+		translation.x = 3.5;
 		velocity.x *= -1;
 	}
 

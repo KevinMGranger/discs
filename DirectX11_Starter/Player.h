@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
-#include "Disc.h"
+
+class Disc;
 
 class Player: public GameObject
 {

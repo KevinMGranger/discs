@@ -250,9 +250,9 @@ void MyDemoGame::CreateObjects()
 	arenaMesh->material = mat;
 
 	object = new Player(mesh);
-	p_Disc1 = new Disc(discMesh);
-	p_Disc2 = new Disc(discMesh);
-	p_Disc3 = new Disc(discMesh);
+	p_Disc1 = new Disc(discMesh, object);
+	p_Disc2 = new Disc(discMesh, object);
+	p_Disc3 = new Disc(discMesh, object);
 	arena = new GameObject(arenaMesh);
 
 
