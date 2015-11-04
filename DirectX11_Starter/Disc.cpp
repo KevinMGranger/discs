@@ -1,5 +1,6 @@
 #include "Disc.h"
 #include <math.h>
+#include <stdio.h>
 
 #include "Player.h"
 
@@ -41,8 +42,13 @@ void Disc::MoveDisc(float dt)
 		translation.x = 3.5;
 		velocity.x *= -1;
 	}
-
-
+	if (translation.z < 6.75 && velocity.z < 0)
+	{
+		float numthing = 0 - translation.z / velocity.z;
+		//float xdest = numthing * velocity.x + translation.x;
+		float goalxvel = (player->GetTranslation().x - translation.x) / numthing;
+		velocity.x += (goalxvel - velocity.x) * dt * 5;
+	}
 }
 void Disc::Launch(XMFLOAT3 p, XMFLOAT3 r)
 {
