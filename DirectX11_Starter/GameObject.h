@@ -21,7 +21,7 @@ protected:
 
 
 protected:
-	void update_world_matrix();
+	void updateWorldMatrix();
 	void init();
 
 public:

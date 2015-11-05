@@ -191,19 +191,19 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	auto verts_and_indices = load_model("../Resources/cube.obj");
+	auto verts_and_indices = LoadModel("../Resources/cube.obj");
 
 	mesh = new Mesh(verts_and_indices, device);
-	arenaMesh = new Mesh(load_model("../Resources/cube.obj"), device);
+	arenaMesh = new Mesh(LoadModel("../Resources/cube.obj"), device);
 	arenaMesh = mesh;
 
 	auto &verts = verts_and_indices.first;
 	auto &indices = verts_and_indices.second;
 
 	CylinderColliderBuilder ccb(verts[0].Position);
-	for (auto i = 1; i < verts.size(); ++i) ccb.new_point(verts[i].Position);
-	cyl_col = ccb.finalize();
-	discMesh = new Mesh(load_model("../Resources/dotDisc.obj"), device);
+	for (auto i = 1; i < verts.size(); ++i) ccb.NewPoint(verts[i].Position);
+	cyl_col = ccb.Finalize();
+	discMesh = new Mesh(LoadModel("../Resources/dotDisc.obj"), device);
 }
 
 // --------------------------------------------------------

@@ -107,7 +107,7 @@ void GameObject::Scale(XMFLOAT3 s)
 	worldMatIsDirty = true;
 }
 
-void GameObject::update_world_matrix()
+void GameObject::updateWorldMatrix()
 {
 	//create matrices from transformations
 	XMMATRIX mTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&translation));
@@ -128,7 +128,7 @@ void GameObject::update_world_matrix()
 /// <param name="context">the device context to use to draw the mesh</param>
 void GameObject::Draw(ID3D11DeviceContext* context)
 {
-	if (worldMatIsDirty) update_world_matrix();
+	if (worldMatIsDirty) updateWorldMatrix();
 
 	mesh->Draw(worldMat, context);
 }

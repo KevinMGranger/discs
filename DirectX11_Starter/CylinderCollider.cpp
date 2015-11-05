@@ -7,7 +7,7 @@ CylinderCollider::CylinderCollider(XMFLOAT3 centroid, float half_height, float r
 {
 }
 
-bool CylinderCollider::is_colliding(CylinderCollider const &cyl_1, CylinderCollider const &cyl_2)
+bool CylinderCollider::IsColliding(CylinderCollider const &cyl_1, CylinderCollider const &cyl_2)
 {
 	// TODO: rotation
 
