@@ -49,7 +49,7 @@ void Renderer::SetCamera(Camera * c)
 /// <param name="object">the object to draw</param>
 void Renderer::DrawObject(GameObject* object)
 {
-	Material &mat = *object->mesh->material;
+	Material &mat = *object->GetMaterial();
 
 	mat.VertexShader->SetShader(false);
 	mat.PixelShader->SetShader(false);

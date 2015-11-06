@@ -6,7 +6,7 @@ class Player;
 class Disc : public GameObject
 {
 public:
-	Disc(Mesh* m, Player* p);
+	Disc(Mesh* m, Material* mat, Player* p);
 	~Disc();
 	void Launch(XMFLOAT3 p, XMFLOAT3 r);
 	void MoveDisc(float dt);

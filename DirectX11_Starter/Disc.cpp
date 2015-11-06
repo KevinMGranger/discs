@@ -5,8 +5,8 @@
 #include "Player.h"
 
 
-Disc::Disc(Mesh* m, Player* p)
-	: GameObject(m)
+Disc::Disc(Mesh* m, Material* mat, Player* p)
+	: GameObject(m, mat)
 {
 	translation = XMFLOAT3(0, 0, -5);
 	isActive = false;
