@@ -12,6 +12,6 @@ public:
 
 	static bool IsColliding(CylinderCollider const &cyl1, CylinderCollider const &cyl2);
 
-	XMFLOAT3 centroid;
-	float half_height, radius;
+	XMFLOAT3 Centroid;
+	float HalfHeight, Radius;
 };
