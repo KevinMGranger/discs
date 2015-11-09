@@ -4,9 +4,14 @@
 /// Standard constructor.
 /// </summary>
 /// <param name="m">the mesh to be used</param>
-GameObject::GameObject(Mesh* m) : mesh(m)
+GameObject::GameObject(Mesh* m, Material* mat) : mesh(m), material(mat)
 {
 	init();
+}
+
+Material * GameObject::GetMaterial()
+{
+	return material;
 }
 
 void GameObject::init()
@@ -129,6 +134,12 @@ void GameObject::updateWorldMatrix()
 void GameObject::Draw(ID3D11DeviceContext* context)
 {
 	if (worldMatIsDirty) updateWorldMatrix();
+
+	material->VertexShader->SetMatrix4x4("world", worldMat);
+	material->VertexShader->CopyAllBufferData();
+
+	material->PixelShader->SetShaderResourceView("diffuseTexture", material->ResourceView);
+	material->PixelShader->SetSamplerState("basicSampler", material->SamplerState);
 
 	mesh->Draw(worldMat, context);
 }

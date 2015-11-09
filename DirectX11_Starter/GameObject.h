@@ -19,15 +19,17 @@ protected:
 	
 	bool worldMatIsDirty;
 
+	Mesh *mesh;
+	Material *material;
 
 protected:
 	void updateWorldMatrix();
 	void init();
 
 public:
-	GameObject(Mesh* mesh);
+	GameObject(Mesh* mesh, Material* material);
 
-	Mesh *mesh;
+	Material* GetMaterial();
 
 	//getters for worldmat elements
 	XMFLOAT3 GetTranslation();

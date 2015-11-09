@@ -12,13 +12,6 @@
 class Mesh
 {
 public:
-	//data required to make the draw call
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
-	int indexCount;
-
-	Material *material;
-
 	ID3D11Buffer* GetVertexBuffer();
 	ID3D11Buffer* GetIndexBuffer();
 	int GetIndexCount();
@@ -36,5 +29,10 @@ public:
 	~Mesh();
 
 private:
+	//data required to make the draw call
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
+	int indexCount;
+
 	void setup(const Vertex *vertices, int numVertices, UINT *indices, int numIndices, ID3D11Device *device);
 };

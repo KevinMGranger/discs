@@ -245,16 +245,11 @@ void MyDemoGame::CreateObjects()
 
 	HR(device->CreateSamplerState(&samplerDesc, &mat->SamplerState));
 
-	mesh->material = mat;
-	discMesh->material = mat;
-	arenaMesh->material = mat;
-
-	object = new Player(mesh);
-	p_Disc1 = new Disc(discMesh, object);
-	p_Disc2 = new Disc(discMesh, object);
-	p_Disc3 = new Disc(discMesh, object);
-	arena = new GameObject(arenaMesh);
-
+	object = new Player(mesh, mat);
+	p_Disc1 = new Disc(discMesh, mat, object);
+	p_Disc2 = new Disc(*p_Disc1);
+	p_Disc3 = new Disc(*p_Disc1); 
+	arena = new GameObject(arenaMesh, mat);
 
 	/*
 	object->SetRotation(XMFLOAT3(0, 90.0f, 0));
