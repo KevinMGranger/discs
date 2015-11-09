@@ -25,6 +25,7 @@
 #include <iostream>
 #include "ModelLoading.h"
 #include "CylinderColliderBuilder.h"
+#include "WICTextureLoader.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -96,14 +97,11 @@ MyDemoGame::~MyDemoGame()
 	delete debugCamera;
 	delete trackingCamera;
 
-	if (object->GetMaterial().ResourceView)
-		object->GetMaterial().ResourceView->Release();
-	if (object->GetMaterial().SamplerState)
-		object->GetMaterial().SamplerState->Release();
-	delete object;
-
+	delete mat;
 	delete mesh;
+	delete discMesh;
 
+	delete object;
 	delete p_Disc1;
 	delete p_Disc2;
 	delete p_Disc3;
@@ -111,7 +109,7 @@ MyDemoGame::~MyDemoGame()
 	delete vertexShader;
 	delete pixelShader;
 
-	delete wireframeRS;
+	//delete wireframeRS;
 }
 
 #pragma endregion
@@ -193,17 +191,19 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	auto verts_and_indices = load_model("../Resources/cube.obj");
+	auto verts_and_indices = LoadModel("../Resources/cube.obj");
 
 	mesh = new Mesh(verts_and_indices, device);
+	arenaMesh = new Mesh(LoadModel("../Resources/cube.obj"), device);
+	arenaMesh = mesh;
 
 	auto &verts = verts_and_indices.first;
 	auto &indices = verts_and_indices.second;
 
 	CylinderColliderBuilder ccb(verts[0].Position);
-	for (auto i = 1; i < verts.size(); ++i) ccb.new_point(verts[i].Position);
-	cyl_col = ccb.finalize();
-	discMesh = new Mesh(load_model("../Resources/cylinder.obj"), device);
+	for (auto i = 1; i < verts.size(); ++i) ccb.NewPoint(verts[i].Position);
+	cyl_col = ccb.Finalize();
+	discMesh = new Mesh(LoadModel("../Resources/dotDisc.obj"), device);
 }
 
 // --------------------------------------------------------
@@ -224,20 +224,16 @@ void MyDemoGame::LoadShaders()
 // --------------------------------------------------------
 void MyDemoGame::CreateObjects()
 {
-	Material playerMat;
-	Material discMat;
-	Material arenaMat;
+	mat = new Material;
+	arenaMat = new Material;
 
-	playerMat.VertexShader = vertexShader;
-	playerMat.PixelShader = pixelShader;
-	discMat.VertexShader = vertexShader;
-	discMat.PixelShader = pixelShader;
-	arenaMat.VertexShader = vertexShader;
-	arenaMat.PixelShader = pixelShader;
+	mat->VertexShader = vertexShader;
+	mat->PixelShader = pixelShader;
+	arenaMat->VertexShader = vertexShader;
+	arenaMat->PixelShader = pixelShader;
 
-	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &playerMat.ResourceView));
-	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &discMat.ResourceView));
-	HR(CreateWICTextureFromFile(device, L"../Resources/white.jpg", nullptr, &arenaMat.ResourceView));
+	HR(CreateWICTextureFromFile(device, L"../Resources/blueGlow.jpg", nullptr, &mat->ResourceView));
+	HR(CreateWICTextureFromFile(device, L"../Resources/white.jpg", nullptr, &arenaMat->ResourceView));
 
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
@@ -247,14 +243,23 @@ void MyDemoGame::CreateObjects()
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	HR(device->CreateSamplerState(&samplerDesc, &playerMat.SamplerState));
-	HR(device->CreateSamplerState(&samplerDesc, &discMat.SamplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &mat->SamplerState));
 
-	object = new Player(mesh, playerMat);
-	p_Disc1 = new Disc(discMesh, discMat);
-	p_Disc2 = new Disc(discMesh, discMat);
-	p_Disc3 = new Disc(discMesh, discMat);
-	arena = new GameObject(mesh, playerMat);
+	mesh->material = mat;
+	discMesh->material = mat;
+	arenaMesh->material = mat;
+
+	object = new Player(mesh);
+	p_Disc1 = new Disc(discMesh, object);
+	p_Disc2 = new Disc(discMesh, object);
+	p_Disc3 = new Disc(discMesh, object);
+	arena = new GameObject(arenaMesh);
+
+
+	/*
+	object->SetRotation(XMFLOAT3(0, 90.0f, 0));
+	object->SetScale(XMFLOAT3(0.5f, 0.5f, 0.5f));
+	*/
 
 	arena->SetScale(XMFLOAT3(7, 7, 15));
 	arena->SetTranslation(XMFLOAT3(0, 0, 6));

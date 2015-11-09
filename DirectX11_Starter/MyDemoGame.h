@@ -1,6 +1,7 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include <memory>
 #include "DirectXGameCore.h"
 #include "SimpleShader.h"
 #include "Vertex.h"
@@ -61,9 +62,12 @@ private:
 	void StartGame();
 	void EndGame();
 
-	Mesh* mesh;
-	CylinderCollider cyl_col;
+	Mesh *mesh;
 	Mesh* discMesh;
+	Mesh *arenaMesh;
+	Material *mat, *arenaMat;
+
+	CylinderCollider cyl_col;
 
 	Player* object;
 	Disc* p_Disc1;

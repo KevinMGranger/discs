@@ -4,12 +4,13 @@
 /// Standard constructor.
 /// </summary>
 /// <param name="m">the mesh to be used</param>
-/// <param name="mat">the material to be used</param>
-GameObject::GameObject(Mesh* m, Material mat)
+GameObject::GameObject(Mesh* m) : mesh(m)
 {
-	mesh = m;
-	material = mat;
+	init();
+}
 
+void GameObject::init()
+{
 	worldMat = XMFLOAT4X4();
 
 	translation = XMFLOAT3(0, 0, 0);
@@ -106,13 +107,19 @@ void GameObject::Scale(XMFLOAT3 s)
 	worldMatIsDirty = true;
 }
 
-/// <summary>
-/// Get the material associated with this object.
-/// </summary>
-/// <returns>the material associated with the object</returns>
-Material GameObject::GetMaterial()
+void GameObject::updateWorldMatrix()
 {
-	return material;
+	//create matrices from transformations
+	XMMATRIX mTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&translation));
+	XMMATRIX mRot = XMMatrixRotationRollPitchYawFromVector(
+		XMLoadFloat3(&rotation));
+	XMMATRIX mScale = XMMatrixScalingFromVector(XMLoadFloat3(&scale));
+
+	//combine transformations
+	XMMATRIX mWorldMat = mScale * mRot * mTrans;
+
+	//store the result
+	XMStoreFloat4x4(&worldMat, XMMatrixTranspose(mWorldMat));
 }
 
 /// <summary>
@@ -121,33 +128,7 @@ Material GameObject::GetMaterial()
 /// <param name="context">the device context to use to draw the mesh</param>
 void GameObject::Draw(ID3D11DeviceContext* context)
 {
-	if (worldMatIsDirty)
-	{
-		//create matrices from transformations
-		XMMATRIX mTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&translation));
-		XMMATRIX mRot = XMMatrixRotationRollPitchYawFromVector(
-			XMLoadFloat3(&rotation));
-		XMMATRIX mScale = XMMatrixScalingFromVector(XMLoadFloat3(&scale));
+	if (worldMatIsDirty) updateWorldMatrix();
 
-		//combine transformations
-		XMMATRIX mWorldMat = mScale * mRot * mTrans;
-
-		//store the result
-		XMStoreFloat4x4(&worldMat, XMMatrixTranspose(mWorldMat));
-	}
-
-	material.VertexShader->SetMatrix4x4("world", worldMat);
-	material.VertexShader->CopyAllBufferData();
-
-	material.PixelShader->SetShaderResourceView("diffuseTexture", material.ResourceView);
-	material.PixelShader->SetSamplerState("basicSampler", material.SamplerState);
-
-	mesh->Draw(context);
-}
-
-/// <summary>
-/// Empty destructor.
-/// </summary>
-GameObject::~GameObject()
-{
+	mesh->Draw(worldMat, context);
 }

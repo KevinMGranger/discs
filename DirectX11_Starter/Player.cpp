@@ -1,9 +1,9 @@
 #include "Player.h"
 
+#include "Disc.h"
 
-
-Player::Player(Mesh* m, Material mat)
-	: GameObject(m, mat)
+Player::Player(Mesh* m)
+	: GameObject(m)
 {
 	ableToFire = true;
 }

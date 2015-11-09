@@ -3,22 +3,22 @@
 using namespace DirectX;
 
 CylinderCollider::CylinderCollider(XMFLOAT3 centroid, float half_height, float radius)
-	: centroid(centroid), half_height(half_height), radius(radius)
+	: Centroid(centroid), HalfHeight(half_height), Radius(radius)
 {
 }
 
-bool CylinderCollider::is_colliding(CylinderCollider const &cyl_1, CylinderCollider const &cyl_2)
+bool CylinderCollider::IsColliding(CylinderCollider const &cyl_1, CylinderCollider const &cyl_2)
 {
 	// TODO: rotation
 
-	float collision_length = cyl_1.radius + cyl_2.radius;
+	float collision_length = cyl_1.Radius + cyl_2.Radius;
 
 	bool y_colliding =
-		(cyl_1.centroid.y + cyl_1.half_height > cyl_2.centroid.y - cyl_2.half_height) ||
-		(cyl_2.centroid.y + cyl_2.half_height > cyl_1.centroid.y - cyl_1.half_height);
+		(cyl_1.Centroid.y + cyl_1.HalfHeight > cyl_2.Centroid.y - cyl_2.HalfHeight) ||
+		(cyl_2.Centroid.y + cyl_2.HalfHeight > cyl_1.Centroid.y - cyl_1.HalfHeight);
 
-	XMVECTOR cent_1 = XMLoadFloat3(&cyl_1.centroid);
-	XMVECTOR cent_2 = XMLoadFloat3(&cyl_2.centroid);
+	XMVECTOR cent_1 = XMLoadFloat3(&cyl_1.Centroid);
+	XMVECTOR cent_2 = XMLoadFloat3(&cyl_2.Centroid);
 	XMVECTOR cent_1_2d = XMVectorSetY(cent_1, 0);
 	XMVECTOR cent_2_2d = XMVectorSetY(cent_2, 0);
 

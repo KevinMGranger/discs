@@ -1,11 +1,12 @@
 #pragma once
 #include "GameObject.h"
-#include "Disc.h"
+
+class Disc;
 
 class Player: public GameObject
 {
 public:
-	Player(Mesh* m, Material mat);
+	Player(Mesh* m);
 	~Player();
 	void Fire(Disc* d);
 	void ReloadDisc();
