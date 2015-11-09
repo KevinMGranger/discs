@@ -9,10 +9,10 @@ class CylinderColliderBuilder
 public:
 	CylinderColliderBuilder();
 	CylinderColliderBuilder(XMFLOAT3 point);
-	void start(XMFLOAT3 point);
-	void new_point(XMFLOAT3 point);
+	void Start(XMFLOAT3 point);
+	void NewPoint(XMFLOAT3 point);
 
-	CylinderCollider &&finalize();
+	CylinderCollider Finalize();
 
-	XMFLOAT3 max, min;
+	XMFLOAT3 Max, Min;
 };

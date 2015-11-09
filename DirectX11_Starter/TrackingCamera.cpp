@@ -18,6 +18,26 @@ TrackingCamera::~TrackingCamera()
 {
 }
 
+void TrackingCamera::SetPosition(XMFLOAT3 p)
+{
+	position = p;
+}
+
+void TrackingCamera::SetForward(XMFLOAT3 f)
+{
+	forward = f;
+}
+
+void TrackingCamera::BindNewTarget(GameObject * t)
+{
+	target = t;
+}
+
+void TrackingCamera::SetTrackingStrength(float ts)
+{
+	trackStrength = ts;
+}
+
 void TrackingCamera::Update(float deltaTime, float totalTime)
 {
 	XMVECTOR vPosition = XMLoadFloat3(&position);
