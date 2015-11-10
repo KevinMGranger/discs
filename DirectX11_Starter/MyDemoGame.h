@@ -79,6 +79,9 @@ private:
 	TrackingCamera* trackingCamera;
 	bool useDebugCamera;
 
+	Input::GamePadState gamePadState;
+	Input::GamePadButtonStateTracker gamePadTracker;
+
 	Renderer* renderer;
 	gameState gState;
 	// Wrappers for DirectX shaders to provide simplified functionality

@@ -25,8 +25,13 @@ namespace Input {
 
 	// TODO: Gamepad Stuff
 	typedef DirectX::GamePad GamePad;
+	typedef GamePad::State GamePadState;
 	typedef DirectX::GamePad::ButtonStateTracker GamePadButtonStateTracker;
+	typedef GamePadButtonStateTracker::ButtonState GamePadButtonState;
 #pragma endregion
+
+	GamePadState GetGamePadState(int player);
+	bool GamePadButtonIsPressed(GamePadButtonState);
 
 #pragma region Keyboard Functions
 	/// <summary>
@@ -57,7 +62,6 @@ namespace Input {
 	/// <returns>true if the key is up, false if it is not.</returns>
 	bool KeyIsUp(Key key);
 #pragma endregion
-
 
 #pragma region Mouse Movement Functions
 	void SetMouseWindow(HWND hWnd);
@@ -234,7 +238,6 @@ namespace Input {
 
 
 #pragma endregion
-
 
 #pragma region Updates
 	/// <summary>

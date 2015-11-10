@@ -296,11 +296,19 @@ void MyDemoGame::OnResize()
 // --------------------------------------------------------
 void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 {
-	if (KeyPressedThisFrame(Keys::Escape))
+	gamePadState = Input::GetGamePadState(0);
+	gamePadTracker.Update(gamePadState);
+
+	if (
+		KeyPressedThisFrame(Keys::Escape) ||
+		GamePadButtonIsPressed(gamePadTracker.back)
+		)
 		Quit();
-	if (KeyPressedThisFrame(Keys::Q) && gState == GAME)
+	if ((KeyPressedThisFrame(Keys::Q) || GamePadButtonIsPressed(gamePadTracker.start)) &&
+		gState == GAME
+		)
 		EndGame();
-	if (KeyIsDown(Keys::Enter) && gState == MAIN)
+	if ((KeyPressedThisFrame(Keys::Enter) || GamePadButtonIsPressed(gamePadTracker.start)) && gState == MAIN)
 		StartGame();
 
 	debugCamera->Update(deltaTime, totalTime);
@@ -321,17 +329,16 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	//see what happens if you comment it out!
 	renderer->GetLightManager()->UpdateLights(totalTime);
 
-	if (gState == GAME)
-	{
-		if (KeyIsDown(Keys::J))
-		{
-			object->Translate(XMFLOAT3(-deltaTime, 0, 0));
+	switch (gState) {
+	case GAME:
+		if (KeyIsDown(Keys::J)) object->Translate(XMFLOAT3(-deltaTime, 0, 0));
+		else if (KeyIsDown(Keys::K)) object->Translate(XMFLOAT3(deltaTime, 0, 0));
+
+		if (gamePadState.connected) {
+			object->Translate(XMFLOAT3(gamePadState.thumbSticks.leftX * deltaTime, 0, 0));
 		}
-		else if (KeyIsDown(Keys::K))
-		{
-			object->Translate(XMFLOAT3(deltaTime, 0, 0));
-		}
-		if (KeyPressedThisFrame(Keys::Space))
+
+		if (KeyPressedThisFrame(Keys::Space) || GamePadButtonIsPressed(gamePadTracker.a))
 		{
 			Disc* toUse = DiscToLaunch();
 			if(toUse) 
@@ -341,6 +348,7 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 		{
 			object->ReloadDisc();
 		}
+
 		if (p_Disc1->IsActive())
 		{
 			p_Disc1->MoveDisc(deltaTime);
