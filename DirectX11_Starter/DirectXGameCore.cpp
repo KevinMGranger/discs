@@ -178,6 +178,8 @@ bool DirectXGameCore::InitMainWindow()
 
 	// Finally show the window to the user
 	ShowWindow(hMainWnd, SW_SHOW);
+
+	Input::SetMouseWindow(hMainWnd);
 	return true;
 }
 
@@ -586,6 +588,8 @@ LRESULT DirectXGameCore::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	case WM_MOUSEWHEEL:
 	case WM_INPUT:
 	case WM_MOUSEHOVER:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
 		DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
 		return 0;
 	}

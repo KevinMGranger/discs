@@ -183,6 +183,10 @@ bool MyDemoGame::Init()
 
 	device->CreateRasterizerState(&solidDesc, &solidRS);
 
+	// setup mouse mode
+
+	Input::SetMouseMode(Input::MouseMode::MODE_RELATIVE);
+
 	// Successfully initialized
 	return true;
 }
@@ -461,10 +465,6 @@ void MyDemoGame::OnMouseUp(WPARAM btnState, int x, int y)
 // --------------------------------------------------------
 void MyDemoGame::OnMouseMove(WPARAM btnState, int x, int y)
 {
-	debugCamera->Rotate(
-		(x - (float)prevMousePos.x) / 1200,
-		(y - (float)prevMousePos.y) / 1200);
-
 	// Save the previous mouse position, so we have it for the future
 	prevMousePos.x = x;
 	prevMousePos.y = y;

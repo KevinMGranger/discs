@@ -12,25 +12,23 @@ namespace Input {
 
 #pragma region typedefs
 	typedef DirectX::Keyboard Keyboard;
-	typedef DirectX::Keyboard::State KeyboardState;
-	typedef DirectX::Keyboard::Keys Keys;
-	typedef DirectX::Keyboard::Keys Key;
-	typedef DirectX::Keyboard::KeyboardStateTracker KeyboardStateTracker;
+	typedef Keyboard::State KeyboardState;
+	typedef Keyboard::Keys Keys;
+	typedef Keyboard::Keys Key;
+	typedef Keyboard::KeyboardStateTracker KeyboardStateTracker;
 
 	typedef DirectX::Mouse Mouse;
-	typedef DirectX::Mouse::State MouseState;
-	typedef DirectX::Mouse::ButtonStateTracker MouseButtonStateTracker;
+	typedef Mouse::Mode MouseMode;
+	typedef Mouse::State MouseState;
+	typedef Mouse::ButtonStateTracker MouseButtonStateTracker;
+	typedef MouseButtonStateTracker::ButtonState MouseButtonState;
 
 	// TODO: Gamepad Stuff
 	typedef DirectX::GamePad GamePad;
 	typedef DirectX::GamePad::ButtonStateTracker GamePadButtonStateTracker;
 #pragma endregion
 
-	/// <summary>
-	/// Update all input state tracking.
-	/// </summary>
-	void Update();
-
+#pragma region Keyboard Functions
 	/// <summary>
 	/// Determine if the given key was pressed this frame.
 	/// </summary>
@@ -58,4 +56,194 @@ namespace Input {
 	/// <param name="key">The key to test against</param>
 	/// <returns>true if the key is up, false if it is not.</returns>
 	bool KeyIsUp(Key key);
+#pragma endregion
+
+
+#pragma region Mouse Movement Functions
+	void SetMouseWindow(HWND hWnd);
+
+	void SetMouseMode(MouseMode);
+	MouseMode GetMouseMode();
+
+	int GetMouseX();
+	int GetMouseY();
+
+	void ResetScrollWheel();
+	int GetScrollWheel();
+
+#pragma endregion
+
+#pragma region Mouse Button Functions
+
+	/// <summary>
+	/// Determine if the left mouse button was pressed this frame.
+	/// </summary>
+	/// <returns>true if pressed this frame, false if it is up or was also down last frame.</returns>
+	bool LeftMouseDownThisFrame();
+
+	/// <summary>
+	/// Determine if the left mouse button is down at all.
+	/// </summary>
+	/// <returns>true if down at all, false if up at all.</returns>
+	bool LeftMouseIsDown();
+
+	/// <summary>
+	/// Determine if the left mouse button is held down (down this frame and the last one)
+	/// </summary>
+	/// <returns>true if down this frame as well as the last one, false if it is up or was only just pressed this frame.</returns>
+	bool LeftMouseIsHeld();
+
+	/// <summary>
+	/// Determine if the left mouse button was released this frame
+	/// </summary>
+	/// <returns>true if just released this frame, false if down or released on a prior frame</returns>
+	bool LeftMouseReleasedThisFrame();
+
+	/// <summary>
+	/// Determine if the left mouse button is up at all
+	/// </summary>
+	/// <returns>true if up, false if down</returns>
+	bool LeftMouseIsUp();
+
+
+	/// <summary>
+	/// Determine if the middle mouse button was pressed this frame.
+	/// </summary>
+	/// <returns>true if pressed this frame, false if it is up or was also down last frame.</returns>
+	bool MiddleMouseDownThisFrame();
+
+	/// <summary>
+	/// Determine if the middle mouse button is down at all.
+	/// </summary>
+	/// <returns>true if down at all, false if up at all.</returns>
+	bool MiddleMouseIsDown();
+
+	/// <summary>
+	/// Determine if the middle mouse button is held down (down this frame and the last one)
+	/// </summary>
+	/// <returns>true if down this frame as well as the last one, false if it is up or was only just pressed this frame.</returns>
+	bool MiddleMouseIsHeld();
+
+	/// <summary>
+	/// Determine if the middle mouse button was released this frame
+	/// </summary>
+	/// <returns>true if just released this frame, false if down or released on a prior frame</returns>
+	bool MiddleMouseReleasedThisFrame();
+
+	/// <summary>
+	/// Determine if the middle mouse button is up at all
+	/// </summary>
+	/// <returns>true if up, false if down</returns>
+	bool MiddleMouseIsUp();
+
+
+
+	/// <summary>
+	/// Determine if the right mouse button was pressed this frame.
+	/// </summary>
+	/// <returns>true if pressed this frame, false if it is up or was also down last frame.</returns>
+	bool RightMouseDownThisFrame();
+
+	/// <summary>
+	/// Determine if the right mouse button is down at all.
+	/// </summary>
+	/// <returns>true if down at all, false if up at all.</returns>
+	bool RightMouseIsDown();
+
+	/// <summary>
+	/// Determine if the right mouse button is held down (down this frame and the last one)
+	/// </summary>
+	/// <returns>true if down this frame as well as the last one, false if it is up or was only just pressed this frame.</returns>
+	bool RightMouseIsHeld();
+
+	/// <summary>
+	/// Determine if the right mouse button was released this frame
+	/// </summary>
+	/// <returns>true if just released this frame, false if down or released on a prior frame</returns>
+	bool RightMouseReleasedThisFrame();
+
+	/// <summary>
+	/// Determine if the right mouse button is up at all
+	/// </summary>
+	/// <returns>true if up, false if down</returns>
+	bool RightMouseIsUp();
+
+
+
+	/// <summary>
+	/// Determine if the X1 mouse button was pressed this frame.
+	/// </summary>
+	/// <returns>true if pressed this frame, false if it is up or was also down last frame.</returns>
+	bool X1MouseDownThisFrame();
+
+	/// <summary>
+	/// Determine if the X1 mouse button is down at all.
+	/// </summary>
+	/// <returns>true if down at all, false if up at all.</returns>
+	bool X1MouseIsDown();
+
+	/// <summary>
+	/// Determine if the X1 mouse button is held down (down this frame and the last one)
+	/// </summary>
+	/// <returns>true if down this frame as well as the last one, false if it is up or was only just pressed this frame.</returns>
+	bool X1MouseIsHeld();
+
+	/// <summary>
+	/// Determine if the X1 mouse button was released this frame
+	/// </summary>
+	/// <returns>true if just released this frame, false if down or released on a prior frame</returns>
+	bool X1MouseReleasedThisFrame();
+
+	/// <summary>
+	/// Determine if the X1 mouse button is up at all
+	/// </summary>
+	/// <returns>true if up, false if down</returns>
+	bool X1MouseIsUp();
+
+
+
+	/// <summary>
+	/// Determine if the X2 mouse button was pressed this frame.
+	/// </summary>
+	/// <returns>true if pressed this frame, false if it is up or was also down last frame.</returns>
+	bool X2MouseDownThisFrame();
+
+	/// <summary>
+	/// Determine if the X2 mouse button is down at all.
+	/// </summary>
+	/// <returns>true if down at all, false if up at all.</returns>
+	bool X2MouseIsDown();
+
+	/// <summary>
+	/// Determine if the X2 mouse button is held down (down this frame and the last one)
+	/// </summary>
+	/// <returns>true if down this frame as well as the last one, false if it is up or was only just pressed this frame.</returns>
+	bool X2MouseIsHeld();
+
+	/// <summary>
+	/// Determine if the X2 mouse button was released this frame
+	/// </summary>
+	/// <returns>true if just released this frame, false if down or released on a prior frame</returns>
+	bool X2MouseReleasedThisFrame();
+
+	/// <summary>
+	/// Determine if the X2 mouse button is up at all
+	/// </summary>
+	/// <returns>true if up, false if down</returns>
+	bool X2MouseIsUp();
+
+
+#pragma endregion
+
+
+#pragma region Updates
+	/// <summary>
+	/// Update keyboard state tracking.
+	/// </summary>
+	void UpdateKeyboard();
+
+	void UpdateMouse();
+
+	void Update();
+#pragma endregion
 };

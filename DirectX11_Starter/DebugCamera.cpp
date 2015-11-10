@@ -2,7 +2,8 @@
 
 #include "Input.h"
 
-using namespace Input;
+using Input::KeyIsDown;
+using Input::Keys;
 
 
 /// <summary>
@@ -180,6 +181,12 @@ void DebugCamera::Update(float deltaTime, float totalTime)
 	}
 
 	XMStoreFloat3(&position, vPosition);
+
+	if (Input::GetMouseMode() == Input::MouseMode::MODE_RELATIVE) {
+		auto x = Input::GetMouseX();
+		auto y = Input::GetMouseY();
+		Rotate(float(x) / 1200.0f, float(y) / 1200.0f);
+	}
 
 	if (viewMatIsDirty)
 	{
