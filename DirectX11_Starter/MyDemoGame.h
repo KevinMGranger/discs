@@ -85,7 +85,6 @@ private:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
-
 	ID3D11RasterizerState* wireframeRS;
 	ID3D11RasterizerState* solidRS;
 };

@@ -29,6 +29,7 @@
 
 // For the DirectX Math library
 using namespace DirectX;
+using namespace Input;
 
 
 #pragma region Win32 Entry Point (WinMain)
@@ -291,19 +292,19 @@ void MyDemoGame::OnResize()
 // --------------------------------------------------------
 void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 {
-	if (GetAsyncKeyState(VK_ESCAPE))
+	if (KeyPressedThisFrame(Keys::Escape))
 		Quit();
-	if (GetAsyncKeyState('Q') & 0x8000 && gState == GAME)
+	if (KeyPressedThisFrame(Keys::Q) && gState == GAME)
 		EndGame();
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && gState == MAIN)
+	if (KeyIsDown(Keys::Enter) && gState == MAIN)
 		StartGame();
 
 	debugCamera->Update(deltaTime, totalTime);
 	trackingCamera->Update(deltaTime, totalTime);
 
-	if (GetAsyncKeyState('T') & 0x8000)
+	if (KeyPressedThisFrame(Keys::T))
 		useDebugCamera = false;
-	else if (GetAsyncKeyState('Y') & 0x8000)
+	else if (KeyPressedThisFrame(Keys::Y))
 		useDebugCamera = true;
 
 	//this stuff is here to demonstrate the flow for working with a dynamic point light
@@ -318,15 +319,15 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 
 	if (gState == GAME)
 	{
-		if (GetAsyncKeyState('J') & 0x8000)
+		if (KeyIsDown(Keys::J))
 		{
 			object->Translate(XMFLOAT3(-deltaTime, 0, 0));
 		}
-		else if (GetAsyncKeyState('K') & 0x8000)
+		else if (KeyIsDown(Keys::K))
 		{
 			object->Translate(XMFLOAT3(deltaTime, 0, 0));
 		}
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+		if (KeyPressedThisFrame(Keys::Space))
 		{
 			Disc* toUse = DiscToLaunch();
 			if(toUse) 
