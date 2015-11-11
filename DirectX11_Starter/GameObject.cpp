@@ -97,6 +97,15 @@ void GameObject::Translate(XMFLOAT3 t)
 	worldMatIsDirty = true;
 }
 
+void GameObject::Rotate(XMFLOAT3 r)
+{
+	XMVECTOR vRotation = XMLoadFloat3(&rotation);
+	XMVECTOR vNewRotation = XMLoadFloat3(&r);
+	XMStoreFloat3(&rotation, vRotation + vNewRotation);
+
+	worldMatIsDirty = true;
+}
+
 /// <summary>
 /// Scales the object.  Each component of the input vector will be
 /// multiplied by the corresponding component of the existing 
