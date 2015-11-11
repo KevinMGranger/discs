@@ -1,5 +1,10 @@
 #include "DebugCamera.h"
 
+#include "Input.h"
+
+using Input::KeyIsDown;
+using Input::Keys;
+
 
 /// <summary>
 /// Standard constructor.
@@ -130,21 +135,21 @@ void DebugCamera::Update(float deltaTime, float totalTime)
 	XMVECTOR vFinalDirection = XMVector3Transform(vDirection, mRotation);
 	XMVECTOR vUp = XMLoadFloat3(&XMFLOAT3(0, 1, 0));
 
-	if (GetAsyncKeyState('W') & 0x8000)
+	if (KeyIsDown(Keys::W))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Normalize(vFinalDirection) * deltaTime;
 		vPosition += vNeedToAdd;
 		
 		viewMatIsDirty = true;
 	}
-	if (GetAsyncKeyState('S') & 0x8000)
+	if (KeyIsDown(Keys::S))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Normalize(vFinalDirection) * deltaTime;
 		vPosition -= vNeedToAdd;
 
 		viewMatIsDirty = true;
 	}
-	if (GetAsyncKeyState('A') & 0x8000)
+	if (KeyIsDown(Keys::A))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Cross(vFinalDirection, vUp);
 		vNeedToAdd = XMVector3Normalize(vNeedToAdd) * deltaTime;
@@ -152,7 +157,7 @@ void DebugCamera::Update(float deltaTime, float totalTime)
 
 		viewMatIsDirty = true;
 	}
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (KeyIsDown(Keys::D))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Cross(vFinalDirection, vUp);
 		vNeedToAdd = XMVector3Normalize(vNeedToAdd) * deltaTime;
@@ -160,14 +165,14 @@ void DebugCamera::Update(float deltaTime, float totalTime)
 
 		viewMatIsDirty = true;
 	}
-	if (GetAsyncKeyState(' ') & 0x8000)
+	if (KeyIsDown(Keys::Space))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Normalize(vUp) * deltaTime;
 		vPosition += vNeedToAdd;
 
 		viewMatIsDirty = true;
 	}
-	if (GetAsyncKeyState('X') & 0x8000)
+	if (KeyIsDown(Keys::X))
 	{
 		XMVECTOR vNeedToAdd = XMVector3Normalize(vUp) * deltaTime;
 		vPosition -= vNeedToAdd;
@@ -176,6 +181,12 @@ void DebugCamera::Update(float deltaTime, float totalTime)
 	}
 
 	XMStoreFloat3(&position, vPosition);
+
+	if (Input::GetMouseMode() == Input::MouseMode::MODE_RELATIVE) {
+		auto x = Input::GetMouseX();
+		auto y = Input::GetMouseY();
+		Rotate(float(x) / 1200.0f, float(y) / 1200.0f);
+	}
 
 	if (viewMatIsDirty)
 	{

@@ -178,6 +178,8 @@ bool DirectXGameCore::InitMainWindow()
 
 	// Finally show the window to the user
 	ShowWindow(hMainWnd, SW_SHOW);
+
+	Input::SetMouseWindow(hMainWnd);
 	return true;
 }
 
@@ -344,6 +346,7 @@ int DirectXGameCore::Run()
 			UpdateTimer();
 
 			// Standard game loop type stuff
+			Input::Update();
 			CalculateFrameStats();
 			UpdateScene(deltaTime, totalTime);
 			DrawScene(deltaTime, totalTime);			
@@ -354,7 +357,6 @@ int DirectXGameCore::Run()
 	// recent message's exit code
 	return (int)msg.wParam;
 }
-
 
 // --------------------------------------------------------
 // Updates the timer stats for this frame
@@ -451,6 +453,17 @@ LRESULT DirectXGameCore::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 {
 	switch( msg )
 	{
+	case WM_ACTIVATEAPP:
+		DirectX::Keyboard::ProcessMessage(msg, wParam, lParam);
+		DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
+		return 0;
+
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		DirectX::Keyboard::ProcessMessage(msg, wParam, lParam);
+		return 0;
 	// WM_ACTIVATE is sent when the window is activated or deactivated.
 	// We're using this to keep track of focus, if that's useful to you.
 	case WM_ACTIVATE:
@@ -555,6 +568,7 @@ LRESULT DirectXGameCore::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 		OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
 		return 0;
 
 	// Messages that correspond to mouse button being released while the cursor
@@ -563,12 +577,20 @@ LRESULT DirectXGameCore::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
 		OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
 		return 0;
 
 	// Message that occurs while the mouse moves over the window or while
 	// we're currently capturing it
 	case WM_MOUSEMOVE:
 		OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		// fall through
+	case WM_MOUSEWHEEL:
+	case WM_INPUT:
+	case WM_MOUSEHOVER:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+		DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
 		return 0;
 	}
 

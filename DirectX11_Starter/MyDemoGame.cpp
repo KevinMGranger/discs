@@ -29,6 +29,7 @@
 
 // For the DirectX Math library
 using namespace DirectX;
+using namespace Input;
 
 
 #pragma region Win32 Entry Point (WinMain)
@@ -182,6 +183,10 @@ bool MyDemoGame::Init()
 
 	device->CreateRasterizerState(&solidDesc, &solidRS);
 
+	// setup mouse mode
+
+	Input::SetMouseMode(Input::MouseMode::MODE_RELATIVE);
+
 	// Successfully initialized
 	return true;
 }
@@ -291,19 +296,27 @@ void MyDemoGame::OnResize()
 // --------------------------------------------------------
 void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 {
-	if (GetAsyncKeyState(VK_ESCAPE))
+	gamePadState = Input::GetGamePadState(0);
+	gamePadTracker.Update(gamePadState);
+
+	if (
+		KeyPressedThisFrame(Keys::Escape) ||
+		GamePadButtonIsPressed(gamePadTracker.back)
+		)
 		Quit();
-	if (GetAsyncKeyState('Q') & 0x8000 && gState == GAME)
+	if ((KeyPressedThisFrame(Keys::Q) || GamePadButtonIsPressed(gamePadTracker.start)) &&
+		gState == GAME
+		)
 		EndGame();
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && gState == MAIN)
+	if ((KeyPressedThisFrame(Keys::Enter) || GamePadButtonIsPressed(gamePadTracker.start)) && gState == MAIN)
 		StartGame();
 
 	debugCamera->Update(deltaTime, totalTime);
 	trackingCamera->Update(deltaTime, totalTime);
 
-	if (GetAsyncKeyState('T') & 0x8000)
+	if (KeyPressedThisFrame(Keys::T))
 		useDebugCamera = false;
-	else if (GetAsyncKeyState('Y') & 0x8000)
+	else if (KeyPressedThisFrame(Keys::Y))
 		useDebugCamera = true;
 
 	//this stuff is here to demonstrate the flow for working with a dynamic point light
@@ -316,17 +329,16 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	//see what happens if you comment it out!
 	renderer->GetLightManager()->UpdateLights(totalTime);
 
-	if (gState == GAME)
-	{
-		if (GetAsyncKeyState('J') & 0x8000)
-		{
-			object->Translate(XMFLOAT3(-deltaTime, 0, 0));
+	switch (gState) {
+	case GAME:
+		if (KeyIsDown(Keys::J)) object->Translate(XMFLOAT3(-deltaTime, 0, 0));
+		else if (KeyIsDown(Keys::K)) object->Translate(XMFLOAT3(deltaTime, 0, 0));
+
+		if (gamePadState.connected) {
+			object->Translate(XMFLOAT3(gamePadState.thumbSticks.leftX * deltaTime, 0, 0));
 		}
-		else if (GetAsyncKeyState('K') & 0x8000)
-		{
-			object->Translate(XMFLOAT3(deltaTime, 0, 0));
-		}
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+
+		if (KeyPressedThisFrame(Keys::Space) || GamePadButtonIsPressed(gamePadTracker.a))
 		{
 			Disc* toUse = DiscToLaunch();
 			if(toUse) 
@@ -336,6 +348,7 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 		{
 			object->ReloadDisc();
 		}
+
 		if (p_Disc1->IsActive())
 		{
 			p_Disc1->MoveDisc(deltaTime);
@@ -460,10 +473,6 @@ void MyDemoGame::OnMouseUp(WPARAM btnState, int x, int y)
 // --------------------------------------------------------
 void MyDemoGame::OnMouseMove(WPARAM btnState, int x, int y)
 {
-	debugCamera->Rotate(
-		(x - (float)prevMousePos.x) / 1200,
-		(y - (float)prevMousePos.y) / 1200);
-
 	// Save the previous mouse position, so we have it for the future
 	prevMousePos.x = x;
 	prevMousePos.y = y;

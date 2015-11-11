@@ -17,6 +17,8 @@
 
 #include "dxerr.h"
 
+#include "Input.h"
+
 // moved HR macro into seperate file, so it can be used
 // in other files without including all of this file
 #include "hr.h"
@@ -56,6 +58,7 @@ public:
 	virtual void OnMouseDown(WPARAM btnState, int x, int y){ }
 	virtual void OnMouseUp(WPARAM btnState, int x, int y)  { }
 	virtual void OnMouseMove(WPARAM btnState, int x, int y){ }
+
 
 protected:
 	// Handles window and Direct3D initialization
