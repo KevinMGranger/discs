@@ -24,7 +24,7 @@
 #include "MyDemoGame.h"
 #include <iostream>
 #include "ModelLoading.h"
-#include "CylinderColliderBuilder.h"
+#include "CylinderCollider.h"
 #include "WICTextureLoader.h"
 
 // For the DirectX Math library
@@ -205,9 +205,7 @@ void MyDemoGame::CreateGeometry()
 	auto &verts = verts_and_indices.first;
 	auto &indices = verts_and_indices.second;
 
-	CylinderColliderBuilder ccb(verts[0].Position);
-	for (auto i = 1; i < verts.size(); ++i) ccb.NewPoint(verts[i].Position);
-	cyl_col = ccb.Finalize();
+	cyl_col = CylinderCollider::Make(verts);
 	discMesh = new Mesh(LoadModel("../Resources/dotDisc.obj"), device);
 }
 

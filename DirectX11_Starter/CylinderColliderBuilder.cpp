@@ -1,4 +1,6 @@
 #include "CylinderColliderBuilder.h"
+#include "CylinderCollider.h"
+#include "Vertex.h"
 
 using namespace DirectX;
 
