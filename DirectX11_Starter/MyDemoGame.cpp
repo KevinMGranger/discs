@@ -196,11 +196,13 @@ void MyDemoGame::CreateGeometry()
 {
 	MeshManager::SetDevice(device);
 
-	mesh  = MeshManager::LoadModel("../Resources/playerOne.obj");
+	mesh = MeshManager::LoadModel("../Resources/playerOne.obj");
+	p2Mesh = MeshManager::LoadModel("../Resources/playerTwo.obj");
 
 	arenaMesh = MeshManager::LoadModel("../Resources/cube.obj");
 
 	discMesh = MeshManager::LoadModel("../Resources/dotDisc.obj");
+	platformMesh = MeshManager::LoadModel("../Resources/dotPlatform.obj");
 }
 
 // --------------------------------------------------------
@@ -244,16 +246,30 @@ void MyDemoGame::CreateObjects()
 
 	object = new Player(mesh, mat);
 	for (auto &disc : discs) disc = new Disc(discMesh, mat, object);
+	player2 = new Player(p2Mesh, mat);
+	for (auto &disc : p2discs) disc = new Disc(discMesh, mat, player2);
 	object->Scale(XMFLOAT3(.1f, .1f, .1f));
+	player2->Scale(XMFLOAT3(.1f, .1f, .1f));
+	player2->Translate(XMFLOAT3(0, 0.0, 12.0));
+
+
 	arena = new GameObject(arenaMesh, mat);
+	p1Platform = new GameObject(platformMesh, mat);
+	p2Platform = new GameObject(platformMesh, mat);
 
 	/*
 	object->SetRotation(XMFLOAT3(0, 90.0f, 0));
 	object->SetScale(XMFLOAT3(0.5f, 0.5f, 0.5f));
 	*/
 
-	arena->SetScale(XMFLOAT3(7, 7, 15));
+	arena->SetScale(XMFLOAT3(7, 7, 17));
 	arena->SetTranslation(XMFLOAT3(0, 0, 6));
+
+	p1Platform->SetScale(XMFLOAT3(0.5, 0.5, 0.5));
+	p2Platform->SetScale(XMFLOAT3(0.5, 0.5, 0.5));
+
+	p1Platform->Translate(XMFLOAT3(0, -0.2, 0.0));
+	p2Platform->Translate(XMFLOAT3(0, -0.2, 12.0));
 }
 
 #pragma endregion
@@ -425,8 +441,12 @@ void MyDemoGame::DrawScene(float deltaTime, float totalTime)
 		//Drawing is done simply by asking the renderer to do so.
 		deviceContext->RSSetState(solidRS);
 		renderer->DrawObject(object);
+		renderer->DrawObject(player2);
+		renderer->DrawObject(p1Platform);
+		renderer->DrawObject(p2Platform);
 
 		for (auto &disc : discs) renderer->DrawObject(disc);
+		for (auto &disc : p2discs) renderer->DrawObject(disc);
 
 		deviceContext->RSSetState(wireframeRS);
 		renderer->DrawObject(arena);

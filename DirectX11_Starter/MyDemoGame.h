@@ -64,16 +64,22 @@ private:
 	void EndGame();
 
 	Mesh *mesh;
+	Mesh* p2Mesh;
 	Mesh* discMesh;
+	Mesh* platformMesh;
 	Mesh *arenaMesh;
 	Material *mat, *arenaMat;
 
 	CylinderCollider cyl_col;
 
 	Player* object;
+	Player* player2;
 	std::array<Disc*, 3> discs;
+	std::array<Disc*, 3> p2discs;
 	std::array<bool, 3> discIsColliding;
 	GameObject* arena;
+	GameObject* p1Platform;
+	GameObject* p2Platform;
 
 	DebugCamera* debugCamera;
 	TrackingCamera* trackingCamera;
