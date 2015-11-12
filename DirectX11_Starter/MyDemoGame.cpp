@@ -196,11 +196,9 @@ void MyDemoGame::CreateGeometry()
 {
 	MeshManager::SetDevice(device);
 
-	Mesh *cube = MeshManager::LoadModel("../Resources/cube.obj");
+	mesh  = MeshManager::LoadModel("../Resources/playerOne.obj");
 
-	mesh = cube;
-
-	arenaMesh = cube;
+	arenaMesh = MeshManager::LoadModel("../Resources/cube.obj");
 
 	discMesh = MeshManager::LoadModel("../Resources/dotDisc.obj");
 }
@@ -245,9 +243,8 @@ void MyDemoGame::CreateObjects()
 	HR(device->CreateSamplerState(&samplerDesc, &mat->SamplerState));
 
 	object = new Player(mesh, mat);
-
 	for (auto &disc : discs) disc = new Disc(discMesh, mat, object);
-
+	object->Scale(XMFLOAT3(.1f, .1f, .1f));
 	arena = new GameObject(arenaMesh, mat);
 
 	/*
