@@ -53,6 +53,7 @@ XMFLOAT3 GameObject::GetScale()
 	return scale;
 }
 
+
 /// <summary>
 /// Gets the translation vector of the object.
 /// </summary>

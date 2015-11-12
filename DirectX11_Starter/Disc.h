@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "CylinderColliderComponent.h"
 
 class Player;
 
@@ -15,5 +16,5 @@ private:
 	bool isActive;
 	XMFLOAT3 velocity;
 	Player* player;
+	CylinderColliderComponent colliderComp;
 };
-
