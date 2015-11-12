@@ -24,8 +24,9 @@
 #include "MyDemoGame.h"
 #include <iostream>
 #include "ModelLoading.h"
-#include "CylinderColliderBuilder.h"
+#include "CylinderCollider.h"
 #include "WICTextureLoader.h"
+#include "MeshManager.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -103,9 +104,6 @@ MyDemoGame::~MyDemoGame()
 	delete discMesh;
 
 	delete object;
-	delete p_Disc1;
-	delete p_Disc2;
-	delete p_Disc3;
 
 	delete vertexShader;
 	delete pixelShader;
@@ -196,19 +194,15 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	auto verts_and_indices = LoadModel("../Resources/cube.obj");
+	MeshManager::SetDevice(device);
 
-	mesh = new Mesh(verts_and_indices, device);
-	arenaMesh = new Mesh(LoadModel("../Resources/cube.obj"), device);
-	arenaMesh = mesh;
+	Mesh *cube = MeshManager::LoadModel("../Resources/cube.obj");
 
-	auto &verts = verts_and_indices.first;
-	auto &indices = verts_and_indices.second;
+	mesh = cube;
 
-	CylinderColliderBuilder ccb(verts[0].Position);
-	for (auto i = 1; i < verts.size(); ++i) ccb.NewPoint(verts[i].Position);
-	cyl_col = ccb.Finalize();
-	discMesh = new Mesh(LoadModel("../Resources/dotDisc.obj"), device);
+	arenaMesh = cube;
+
+	discMesh = MeshManager::LoadModel("../Resources/dotDisc.obj");
 }
 
 // --------------------------------------------------------
@@ -251,9 +245,9 @@ void MyDemoGame::CreateObjects()
 	HR(device->CreateSamplerState(&samplerDesc, &mat->SamplerState));
 
 	object = new Player(mesh, mat);
-	p_Disc1 = new Disc(discMesh, mat, object);
-	p_Disc2 = new Disc(*p_Disc1);
-	p_Disc3 = new Disc(*p_Disc1); 
+
+	for (auto &disc : discs) disc = new Disc(discMesh, mat, object);
+
 	arena = new GameObject(arenaMesh, mat);
 
 	/*
@@ -349,18 +343,39 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 			object->ReloadDisc();
 		}
 
-		if (p_Disc1->IsActive())
+		CylinderCollider playerCollider = object->colliderComp;
+
+		static float collisionTimer = 0.0f;
+
+		collisionTimer += deltaTime;
+
+		for (unsigned int i = 0; i < discs.size(); ++i)
 		{
-			p_Disc1->MoveDisc(deltaTime);
+			auto &disc = discs[i];
+
+			if (!disc->IsActive()) continue;
+
+			disc->MoveDisc(deltaTime);
+
+			CylinderCollider discCollider = disc->colliderComp;
+			auto colliding = IsColliding(playerCollider, discCollider);
+
+			if (colliding) discIsColliding[i] = colliding;
 		}
-		if (p_Disc2->IsActive())
+
+		if (collisionTimer > 1.0f)
 		{
-			p_Disc2->MoveDisc(deltaTime);
+			std::wstringstream newCaption;
+			for (auto &colliding : discIsColliding)
+			{
+				newCaption << '[' << ((colliding) ? 'x' : ' ') << ']';
+				colliding = false;
+			}
+
+			windowCaption = newCaption.str();
+			collisionTimer = 0.0f;
 		}
-		if (p_Disc3->IsActive())
-		{
-			p_Disc3->MoveDisc(deltaTime);
-		}
+
 	}
 }
 void MyDemoGame::StartGame()
@@ -376,12 +391,9 @@ void MyDemoGame::EndGame()
 // ----------------------------------------------------------
 Disc* MyDemoGame::DiscToLaunch()
 {
-	if (!p_Disc1->IsActive())
-		return p_Disc1;
-	if (!p_Disc2->IsActive())
-		return p_Disc2;
-	if (!p_Disc3->IsActive())
-		return p_Disc3;
+	for (auto &disc : discs)
+		if (!disc->IsActive()) return disc;
+
 	return NULL;
 }
 // --------------------------------------------------------
@@ -412,9 +424,8 @@ void MyDemoGame::DrawScene(float deltaTime, float totalTime)
 		//Drawing is done simply by asking the renderer to do so.
 		deviceContext->RSSetState(solidRS);
 		renderer->DrawObject(object);
-		renderer->DrawObject(p_Disc1);
-		renderer->DrawObject(p_Disc2);
-		renderer->DrawObject(p_Disc3);
+
+		for (auto &disc : discs) renderer->DrawObject(disc);
 
 		deviceContext->RSSetState(wireframeRS);
 		renderer->DrawObject(arena);
