@@ -327,7 +327,8 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	case GAME:
 		if (KeyIsDown(Keys::J)) object->Translate(XMFLOAT3(-deltaTime, 0, 0));
 		else if (KeyIsDown(Keys::K)) object->Translate(XMFLOAT3(deltaTime, 0, 0));
-
+		if (KeyIsDown(Keys::U)) object->Rotate(XMFLOAT3(0, -deltaTime, 0));
+		else if (KeyIsDown(Keys::I)) object->Rotate(XMFLOAT3(0, deltaTime, 0));
 		if (gamePadState.connected) {
 			object->Translate(XMFLOAT3(gamePadState.thumbSticks.leftX * deltaTime, 0, 0));
 		}
