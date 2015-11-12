@@ -4,9 +4,11 @@
 
 #include "Player.h"
 
+#include "MeshManager.h"
+
 
 Disc::Disc(Mesh* m, Material* mat, Player* p)
-	: GameObject(m, mat)
+	: GameObject(m, mat), colliderComp(this, MeshManager::GetColliderForMesh(m))
 {
 	translation = XMFLOAT3(0, 0, -5);
 	isActive = false;

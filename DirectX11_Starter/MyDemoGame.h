@@ -2,6 +2,7 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include <array>
 #include "DirectXGameCore.h"
 #include "SimpleShader.h"
 #include "Vertex.h"
@@ -70,9 +71,8 @@ private:
 	CylinderCollider cyl_col;
 
 	Player* object;
-	Disc* p_Disc1;
-	Disc* p_Disc2;
-	Disc* p_Disc3;
+	std::array<Disc*, 3> discs;
+	std::array<bool, 3> discIsColliding;
 	GameObject* arena;
 
 	DebugCamera* debugCamera;
