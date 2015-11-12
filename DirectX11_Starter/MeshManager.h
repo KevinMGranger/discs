@@ -7,6 +7,7 @@
 
 namespace MeshManager
 {
-	Mesh *LoadModel(std::string path, ID3D11Device *device);
+	void SetDevice(ID3D11Device *device);
+	Mesh *LoadModel(std::string path);
 	CylinderCollider *GetColliderForMesh(Mesh *);
 };

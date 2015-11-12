@@ -26,6 +26,7 @@
 #include "ModelLoading.h"
 #include "CylinderCollider.h"
 #include "WICTextureLoader.h"
+#include "MeshManager.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -196,17 +197,15 @@ bool MyDemoGame::Init()
 // --------------------------------------------------------
 void MyDemoGame::CreateGeometry()
 {
-	auto verts_and_indices = LoadModel("../Resources/cube.obj");
+	MeshManager::SetDevice(device);
 
-	mesh = new Mesh(verts_and_indices, device);
-	arenaMesh = new Mesh(LoadModel("../Resources/cube.obj"), device);
-	arenaMesh = mesh;
+	Mesh *cube = MeshManager::LoadModel("../Resources/cube.obj");
 
-	auto &verts = verts_and_indices.first;
-	auto &indices = verts_and_indices.second;
+	mesh = cube;
 
-	cyl_col = CylinderCollider::Make(verts);
-	discMesh = new Mesh(LoadModel("../Resources/dotDisc.obj"), device);
+	arenaMesh = cube;
+
+	discMesh = MeshManager::LoadModel("../Resources/dotDisc.obj");
 }
 
 // --------------------------------------------------------

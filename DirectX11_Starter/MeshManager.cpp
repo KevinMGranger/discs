@@ -13,10 +13,16 @@ struct meshAndCollider
 
 VerticesAndIndices LoadVertsAndIndices(const char *filename);
 
+ID3D11Device *device;
 std::unordered_map<std::string, meshAndCollider> loadedModels;
 std::unordered_map<Mesh*, CylinderCollider*> meshToCollider;
 
-Mesh *MeshManager::LoadModel(std::string path, ID3D11Device *device)
+void MeshManager::SetDevice(ID3D11Device *pDevice)
+{
+	device = pDevice;
+}
+
+Mesh *MeshManager::LoadModel(std::string path)
 {
 	auto meshAndCol = loadedModels.find(path);
 
@@ -37,7 +43,7 @@ Mesh *MeshManager::LoadModel(std::string path, ID3D11Device *device)
 	return mesh;
 }
 
-CylinderCollider *GetColliderForMesh(Mesh *mesh)
+CylinderCollider *MeshManager::GetColliderForMesh(Mesh *mesh)
 {
 	auto collider = meshToCollider.find(mesh);
 
