@@ -31,6 +31,7 @@
 // For the DirectX Math library
 using namespace DirectX;
 using namespace Input;
+using Input::GamePad;
 
 
 #pragma region Win32 Entry Point (WinMain)
@@ -303,20 +304,28 @@ void MyDemoGame::OnResize()
 // --------------------------------------------------------
 void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 {
-	gamePadState = Input::GetGamePadState(0);
-	gamePadTracker.Update(gamePadState);
+	auto &padState = gamePad.GetState();
+	auto &trackedPadState = gamePad.GetTrackedState();
 
-	if (
-		KeyPressedThisFrame(Keys::Escape) ||
-		GamePadButtonIsPressed(gamePadTracker.back)
+	if (KeyPressedThisFrame(Keys::Escape) ||
+		GamePad::ButtonPressedThisFrame(trackedPadState.back);
 		)
 		Quit();
-	if ((KeyPressedThisFrame(Keys::Q) || GamePadButtonIsPressed(gamePadTracker.start)) &&
-		gState == GAME
-		)
-		EndGame();
-	if ((KeyPressedThisFrame(Keys::Enter) || GamePadButtonIsPressed(gamePadTracker.start)) && gState == MAIN)
-		StartGame();
+
+
+	switch (gState) {
+	case GAME:
+		if (KeyPressedThisFrame(Keys::Q) || padState.buttons.start)
+			EndGame();
+		// shouldn't get here anywho
+		break;
+
+	case MAIN:
+		if (KeyPressedThisFrame(Keys::Enter) || padState.buttons.start)
+			StartGame();
+
+		break;
+	}
 
 	debugCamera->Update(deltaTime, totalTime);
 	trackingCamera->Update(deltaTime, totalTime);
@@ -343,9 +352,9 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 		if (KeyIsDown(Keys::U)) object->Rotate(XMFLOAT3(0, -deltaTime, 0));
 		else if (KeyIsDown(Keys::I)) object->Rotate(XMFLOAT3(0, deltaTime, 0));
 
-		if (gamePadState.connected) {
-			object->Translate(XMFLOAT3(gamePadState.thumbSticks.leftX * deltaTime, 0, 0));
-			float rotAmt = gamePadState.triggers.right - gamePadState.triggers.left;
+		if (padState.IsConnected()) {
+			object->Translate(XMFLOAT3(padState.thumbSticks.leftX * deltaTime, 0, 0));
+			float rotAmt = padState.triggers.right - padState.triggers.left;
 			object->Rotate(XMFLOAT3(0, rotAmt * deltaTime, 0));
 		}
 
