@@ -35,6 +35,7 @@ namespace Input {
 		typedef ButtonStateTracker::ButtonState ButtonState;
 		static const int MAX_PLAYERS = DirectX::GamePad::MAX_PLAYER_COUNT;
 
+		GamePad();
 		static GamePad FromId(int id);
 		static GamePad Next();
 

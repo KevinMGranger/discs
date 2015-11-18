@@ -13,15 +13,24 @@ vector<GamePad::ButtonStateTracker> trackedPadStates(MAX_PLAYERS);
 
 void updateGamePad(int i)
 {
-	trackedPadStates[i].Update(padStates[i] = theGamePadMgr.GetState(i));
+	auto newState = theGamePadMgr.GetState(i);
+	padStates[i] = newState;
+	trackedPadStates[i].Update(newState);
 }
 
 void Input::UpdateGamepads()
 {
 	for (auto i = 0; i < MAX_PLAYERS; ++i)
-		if (activeGamePads[i]) updateGamePad(i);
+		if (activeGamePads[i]) {
+			updateGamePad(i);
+			// for debug breaking
+		}
 }
 
+GamePad::GamePad() :
+	id()
+{
+}
 
 GamePad::GamePad(int id) :
 	id(id)
@@ -65,32 +74,32 @@ GamePad::ButtonStateTracker const& GamePad::GetTrackedState()
 
 bool GamePad::ButtonPressedThisFrame(ButtonState btn)
 {
-	return btn & ButtonState::PRESSED;
+	return btn == ButtonState::PRESSED;
 }
 
 bool GamePad::ButtonIsDown(ButtonState btn)
 {
-	return btn & (ButtonState::HELD | ButtonState::PRESSED);
+	return btn == ButtonState::HELD || btn == ButtonState::PRESSED;
 }
 
 bool GamePad::ButtonIsHeld(ButtonState btn)
 {
-	return btn & ButtonState::HELD;
+	return btn == ButtonState::HELD;
 }
 
 bool GamePad::ButtonReleasedThisFrame(ButtonState btn)
 {
-	return btn & ButtonState::RELEASED;
+	return btn == ButtonState::RELEASED;
 }
 
 bool GamePad::ButtonIsUp(ButtonState btn)
 {
-	return btn & (ButtonState::RELEASED | ButtonState::UP);
+	return btn == ButtonState::RELEASED || btn == ButtonState::UP;
 }
 
 bool GamePad::ButtonHasBeenUp(ButtonState btn)
 {
-	return btn & ButtonState::UP;
+	return btn == ButtonState::UP;
 }
 
 bool GamePad::SetVibes(float left, float right, float leftTrig, float rightTrig)

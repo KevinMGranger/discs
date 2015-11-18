@@ -66,7 +66,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 // fields, and then we can overwrite any that we'd like
 // --------------------------------------------------------
 MyDemoGame::MyDemoGame(HINSTANCE hInstance) 
-	: DirectXGameCore(hInstance)
+	: DirectXGameCore(hInstance), gamePad(gamePad.FromId(0))
 {
 	// Set up a custom caption for the game window.
 	// - The "L" before the string signifies a "wide character" string
@@ -308,20 +308,20 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 	auto &trackedPadState = gamePad.GetTrackedState();
 
 	if (KeyPressedThisFrame(Keys::Escape) ||
-		GamePad::ButtonPressedThisFrame(trackedPadState.back);
+		gamePad.ButtonPressedThisFrame(trackedPadState.back)
 		)
 		Quit();
 
 
 	switch (gState) {
 	case GAME:
-		if (KeyPressedThisFrame(Keys::Q) || padState.buttons.start)
+		if (KeyPressedThisFrame(Keys::Q) || gamePad.ButtonPressedThisFrame(trackedPadState.start))
 			EndGame();
 		// shouldn't get here anywho
 		break;
 
 	case MAIN:
-		if (KeyPressedThisFrame(Keys::Enter) || padState.buttons.start)
+		if (KeyPressedThisFrame(Keys::Enter) || gamePad.ButtonPressedThisFrame(trackedPadState.start))
 			StartGame();
 
 		break;
@@ -358,7 +358,7 @@ void MyDemoGame::UpdateScene(float deltaTime, float totalTime)
 			object->Rotate(XMFLOAT3(0, rotAmt * deltaTime, 0));
 		}
 
-		if (KeyPressedThisFrame(Keys::Space) || GamePadButtonIsPressed(gamePadTracker.a))
+		if (KeyPressedThisFrame(Keys::Space) || gamePad.ButtonPressedThisFrame(trackedPadState.a))
 		{
 			Disc* toUse = DiscToLaunch();
 			if(toUse) 
